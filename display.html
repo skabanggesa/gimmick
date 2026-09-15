@@ -1,2484 +1,837 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ms">
 
 <head>
-
 <meta charset="UTF-8">
-
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
->
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SAFE 2026 — Main Display</title>
 
-
 <style>
-
-/* =========================================================
-   RESET
-========================================================= */
-
 * {
     box-sizing: border-box;
 }
 
-
 html,
 body {
-
     margin: 0;
-
     width: 100%;
     height: 100%;
-
     overflow: hidden;
-
     background: #000;
-
     color: white;
-
-    font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
-
+    font-family: Arial, Helvetica, sans-serif;
 }
-
-
-/* =========================================================
-   MAIN DISPLAY
-========================================================= */
 
 body {
-
     position: relative;
-
     display: flex;
-
     align-items: center;
-
     justify-content: center;
-
 }
-
-
-/* =========================================================
-   DIGITAL GRID
-========================================================= */
 
 .grid {
-
     position: fixed;
-
     inset: 0;
-
     pointer-events: none;
-
     opacity: .13;
-
     background-image:
-
-        linear-gradient(
-            rgba(0,210,255,.22) 1px,
-            transparent 1px
-        ),
-
-        linear-gradient(
-            90deg,
-            rgba(0,210,255,.22) 1px,
-            transparent 1px
-        );
-
-    background-size:
-        60px 60px;
-
+        linear-gradient(rgba(0,210,255,.22) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,210,255,.22) 1px, transparent 1px);
+    background-size: 60px 60px;
     z-index: 2;
-
 }
-
-
-/* =========================================================
-   AMBIENT LIGHT
-========================================================= */
 
 .ambient {
-
     position: fixed;
-
     inset: 0;
-
     pointer-events: none;
-
     background:
-
-        radial-gradient(
-            circle at center,
-            rgba(0,140,255,.08),
-            transparent 38%
-        ),
-
-        radial-gradient(
-            circle at center,
-            rgba(0,255,200,.035),
-            transparent 65%
-        );
-
+        radial-gradient(circle at center, rgba(0,140,255,.08), transparent 38%),
+        radial-gradient(circle at center, rgba(0,255,200,.035), transparent 65%);
     z-index: 1;
-
 }
-
-
-/* =========================================================
-   CONNECTION STATUS
-========================================================= */
 
 .connection {
-
     position: fixed;
-
     top: 28px;
-
     left: 50%;
-
-    transform:
-        translateX(-50%);
-
+    transform: translateX(-50%);
     z-index: 50;
-
-    padding:
-        8px 18px;
-
-    border:
-        1px solid
-        rgba(0,210,255,.25);
-
-    background:
-        rgba(0,0,0,.55);
-
-    color:
-        rgba(255,255,255,.5);
-
+    padding: 8px 18px;
+    border: 1px solid rgba(0,210,255,.25);
+    background: rgba(0,0,0,.55);
+    color: rgba(255,255,255,.5);
     font-size: 10px;
-
     letter-spacing: 3px;
-
     text-align: center;
-
     white-space: nowrap;
-
 }
-
-
-/* =========================================================
-   LOCK SCREEN
-========================================================= */
 
 .lock {
-
     position: fixed;
-
     inset: 0;
-
     z-index: 10;
-
     display: flex;
-
     align-items: center;
-
     justify-content: center;
-
     text-align: center;
-
-    background:
-        #000;
-
+    background: #000;
     opacity: 1;
-
     visibility: visible;
-
-    transition:
-        opacity .8s ease,
-        visibility .8s ease;
-
+    transition: opacity .8s ease, visibility .8s ease;
 }
-
 
 .lock.hide {
-
     opacity: 0;
-
     visibility: hidden;
-
 }
-
 
 .lock-content {
-
     position: relative;
-
-    width: min(
-        700px,
-        90vw
-    );
-
+    width: min(700px, 90vw);
 }
-
-
-/* =========================================================
-   LOCK ICON
-========================================================= */
 
 .lock-icon {
-
     position: relative;
-
     width: 130px;
     height: 130px;
-
-    margin:
-        0 auto 30px;
-
+    margin: 0 auto 30px;
     display: flex;
-
     align-items: center;
-
     justify-content: center;
-
-    border:
-        1px solid
-        rgba(0,210,255,.3);
-
+    border: 1px solid rgba(0,210,255,.3);
     border-radius: 50%;
-
     color: #00d9ff;
-
     font-size: 58px;
-
-    box-shadow:
-
-        0 0 20px
-        rgba(0,210,255,.12),
-
-        inset 0 0 25px
-        rgba(0,210,255,.04);
-
-    animation:
-        lockPulse 3s ease-in-out infinite;
-
+    box-shadow: 0 0 20px rgba(0,210,255,.12), inset 0 0 25px rgba(0,210,255,.04);
+    animation: lockPulse 3s ease-in-out infinite;
 }
-
 
 .lock-icon::before {
-
     content: "";
-
     position: absolute;
-
     inset: -18px;
-
-    border:
-        1px solid
-        rgba(0,210,255,.15);
-
+    border: 1px solid rgba(0,210,255,.15);
     border-radius: 50%;
-
-    animation:
-        rotateRing
-        8s linear infinite;
-
+    animation: rotateRing 8s linear infinite;
 }
-
 
 .lock-icon::after {
-
     content: "";
-
     position: absolute;
-
     inset: -35px;
-
-    border:
-        1px dashed
-        rgba(0,210,255,.08);
-
+    border: 1px dashed rgba(0,210,255,.08);
     border-radius: 50%;
-
-    animation:
-        rotateRingReverse
-        14s linear infinite;
-
+    animation: rotateRingReverse 14s linear infinite;
 }
-
 
 @keyframes lockPulse {
-
-    0%,
-    100% {
-
-        transform:
-            scale(.95);
-
-        opacity: .55;
-
-    }
-
-    50% {
-
-        transform:
-            scale(1.05);
-
-        opacity: 1;
-
-    }
-
+    0%, 100% { transform: scale(.95); opacity: .55; }
+    50% { transform: scale(1.05); opacity: 1; }
 }
-
 
 @keyframes rotateRing {
-
-    from {
-        transform:
-            rotate(0deg);
-    }
-
-    to {
-        transform:
-            rotate(360deg);
-    }
-
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
-
 
 @keyframes rotateRingReverse {
-
-    from {
-        transform:
-            rotate(360deg);
-    }
-
-    to {
-        transform:
-            rotate(0deg);
-    }
-
+    from { transform: rotate(360deg); }
+    to { transform: rotate(0deg); }
 }
-
-
-/* =========================================================
-   LOCK TITLE
-========================================================= */
 
 .lock-title {
-
-    font-size:
-        clamp(
-            38px,
-            6vw,
-            76px
-        );
-
+    font-size: clamp(38px, 6vw, 76px);
     font-weight: 900;
-
     letter-spacing: 7px;
-
     color: #fff;
-
-    text-shadow:
-
-        0 0 12px
-        rgba(255,255,255,.5),
-
-        0 0 35px
-        rgba(0,210,255,.45);
-
+    text-shadow: 0 0 12px rgba(255,255,255,.5), 0 0 35px rgba(0,210,255,.45);
 }
-
 
 .lock-subtitle {
-
     margin-top: 18px;
-
-    font-size:
-        clamp(
-            11px,
-            1.3vw,
-            15px
-        );
-
+    font-size: clamp(11px, 1.3vw, 15px);
     letter-spacing: 5px;
-
-    color:
-        rgba(255,255,255,.45);
-
+    color: rgba(255,255,255,.45);
 }
-
 
 .lock-line {
-
     width: 300px;
-
     max-width: 70vw;
-
     height: 1px;
-
-    margin:
-        28px auto;
-
-    background:
-        linear-gradient(
-            90deg,
-            transparent,
-            #00d9ff,
-            transparent
-        );
-
-    box-shadow:
-        0 0 12px
-        #00d9ff;
-
+    margin: 28px auto;
+    background: linear-gradient(90deg, transparent, #00d9ff, transparent);
+    box-shadow: 0 0 12px #00d9ff;
 }
-
-
-/* =========================================================
-   AUTHENTICATING SCREEN
-========================================================= */
 
 .auth {
-
     position: fixed;
-
     inset: 0;
-
     z-index: 20;
-
     display: flex;
-
     align-items: center;
-
     justify-content: center;
-
     text-align: center;
-
-    background:
-        rgba(0,0,0,.96);
-
+    background: rgba(0,0,0,.96);
     opacity: 0;
-
     visibility: hidden;
-
-    transition:
-        opacity .45s ease,
-        visibility .45s ease;
-
+    transition: opacity .45s ease, visibility .45s ease;
 }
-
 
 .auth.active {
-
     opacity: 1;
-
     visibility: visible;
-
 }
-
 
 .auth-inner {
-
-    width: min(
-        900px,
-        92vw
-    );
-
+    width: min(900px, 92vw);
 }
-
-
-/* =========================================================
-   AUTH RINGS
-========================================================= */
 
 .auth-ring {
-
     position: relative;
-
-    width:
-        clamp(
-            190px,
-            25vw,
-            300px
-        );
-
-    height:
-        clamp(
-            190px,
-            25vw,
-            300px
-        );
-
-    margin:
-        0 auto 45px;
-
-    border:
-        2px solid
-        rgba(0,217,255,.35);
-
+    width: clamp(190px, 25vw, 300px);
+    height: clamp(190px, 25vw, 300px);
+    margin: 0 auto 45px;
+    border: 2px solid rgba(0,217,255,.35);
     border-radius: 50%;
-
-    box-shadow:
-
-        0 0 25px
-        rgba(0,217,255,.12),
-
-        inset 0 0 30px
-        rgba(0,217,255,.05);
-
-    animation:
-        authRotate
-        5s linear infinite;
-
+    box-shadow: 0 0 25px rgba(0,217,255,.12), inset 0 0 30px rgba(0,217,255,.05);
+    animation: authRotate 5s linear infinite;
 }
-
 
 .auth-ring::before {
-
     content: "";
-
     position: absolute;
-
     inset: 22px;
-
-    border:
-        1px solid
-        rgba(0,217,255,.65);
-
+    border: 1px solid rgba(0,217,255,.65);
     border-radius: 50%;
-
 }
-
 
 .auth-ring::after {
-
     content: "";
-
     position: absolute;
-
     inset: 55px;
-
-    border:
-        1px dashed
-        rgba(0,217,255,.5);
-
+    border: 1px dashed rgba(0,217,255,.5);
     border-radius: 50%;
-
 }
-
 
 .auth-core {
-
     position: absolute;
-
     left: 50%;
     top: 50%;
-
-    transform:
-        translate(-50%, -50%);
-
+    transform: translate(-50%, -50%);
     font-size: 65px;
-
     color: #00d9ff;
-
-    text-shadow:
-
-        0 0 15px #00d9ff,
-
-        0 0 40px
-        rgba(0,217,255,.7);
-
-    animation:
-        corePulse 1.4s
-        ease-in-out infinite;
-
+    text-shadow: 0 0 15px #00d9ff, 0 0 40px rgba(0,217,255,.7);
+    animation: corePulse 1.4s ease-in-out infinite;
 }
-
 
 @keyframes authRotate {
-
-    from {
-
-        transform:
-            rotate(0deg);
-
-    }
-
-    to {
-
-        transform:
-            rotate(360deg);
-
-    }
-
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
-
 
 @keyframes corePulse {
-
-    0%,
-    100% {
-
-        transform:
-            translate(-50%, -50%)
-            scale(.85);
-
-        opacity: .5;
-
-    }
-
-    50% {
-
-        transform:
-            translate(-50%, -50%)
-            scale(1.1);
-
-        opacity: 1;
-
-    }
-
+    0%, 100% { transform: translate(-50%, -50%) scale(.85); opacity: .5; }
+    50% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
 }
-
-
-/* =========================================================
-   AUTH TEXT
-========================================================= */
 
 .auth-title {
-
-    font-size:
-        clamp(
-            38px,
-            6vw,
-            72px
-        );
-
+    font-size: clamp(38px, 6vw, 72px);
     font-weight: 900;
-
     letter-spacing: 8px;
-
     color: #00d9ff;
-
-    text-shadow:
-
-        0 0 15px #00d9ff,
-
-        0 0 45px
-        rgba(0,217,255,.45);
-
-    animation:
-        textPulse 1.8s
-        ease-in-out infinite;
-
+    text-shadow: 0 0 15px #00d9ff, 0 0 45px rgba(0,217,255,.45);
+    animation: textPulse 1.8s ease-in-out infinite;
 }
-
 
 .auth-small {
-
     margin-top: 20px;
-
-    font-size:
-        clamp(
-            10px,
-            1.5vw,
-            16px
-        );
-
+    font-size: clamp(10px, 1.5vw, 16px);
     letter-spacing: 4px;
-
-    color:
-        rgba(255,255,255,.65);
-
+    color: rgba(255,255,255,.65);
     line-height: 1.7;
-
 }
-
 
 .auth-signal {
-
     margin-top: 28px;
-
     font-size: 10px;
-
     letter-spacing: 3px;
-
-    color:
-        rgba(0,217,255,.65);
-
+    color: rgba(0,217,255,.65);
 }
-
 
 .auth-signal::before {
-
     content: "";
-
     display: inline-block;
-
     width: 7px;
     height: 7px;
-
     margin-right: 8px;
-
     border-radius: 50%;
-
     background: #00d9ff;
-
-    box-shadow:
-        0 0 12px
-        #00d9ff;
-
-    animation:
-        signalBlink .8s
-        infinite;
-
+    box-shadow: 0 0 12px #00d9ff;
+    animation: signalBlink .8s infinite;
 }
-
 
 @keyframes textPulse {
-
-    0%,
-    100% {
-
-        opacity: .55;
-
-    }
-
-    50% {
-
-        opacity: 1;
-
-    }
-
+    0%, 100% { opacity: .55; }
+    50% { opacity: 1; }
 }
-
 
 @keyframes signalBlink {
-
-    0%,
-    100% {
-
-        opacity: .2;
-
-    }
-
-    50% {
-
-        opacity: 1;
-
-    }
-
+    0%, 100% { opacity: .2; }
+    50% { opacity: 1; }
 }
-
-
-/* =========================================================
-   GRANTED SCREEN
-========================================================= */
 
 .granted {
-
     position: fixed;
-
     inset: 0;
-
     z-index: 30;
-
     display: flex;
-
     align-items: center;
-
     justify-content: center;
-
     text-align: center;
-
     background: #000;
-
     opacity: 0;
-
     visibility: hidden;
-
 }
-
 
 .granted.active {
-
     opacity: 1;
-
     visibility: visible;
-
 }
-
 
 .granted-content {
-
-    animation:
-        grantedIn
-        .8s ease;
-
+    animation: grantedIn .8s ease;
 }
-
 
 @keyframes grantedIn {
-
-    from {
-
-        opacity: 0;
-
-        transform:
-            scale(.65);
-
-    }
-
-    to {
-
-        opacity: 1;
-
-        transform:
-            scale(1);
-
-    }
-
+    from { opacity: 0; transform: scale(.65); }
+    to { opacity: 1; transform: scale(1); }
 }
-
 
 .granted-symbol {
-
     width: 150px;
     height: 150px;
-
-    margin:
-        0 auto 35px;
-
+    margin: 0 auto 35px;
     display: flex;
-
     align-items: center;
-
     justify-content: center;
-
-    border:
-        2px solid
-        #00ffae;
-
+    border: 2px solid #00ffae;
     border-radius: 50%;
-
     font-size: 90px;
-
     color: #00ffae;
-
-    text-shadow:
-        0 0 20px #00ffae,
-        0 0 60px
-        rgba(0,255,174,.7);
-
-    box-shadow:
-
-        0 0 25px
-        rgba(0,255,174,.3),
-
-        inset 0 0 30px
-        rgba(0,255,174,.08);
-
-    animation:
-        grantedPulse
-        1.3s ease-in-out infinite;
-
+    text-shadow: 0 0 20px #00ffae, 0 0 60px rgba(0,255,174,.7);
+    box-shadow: 0 0 25px rgba(0,255,174,.3), inset 0 0 30px rgba(0,255,174,.08);
+    animation: grantedPulse 1.3s ease-in-out infinite;
 }
-
 
 @keyframes grantedPulse {
-
-    0%,
-    100% {
-
-        transform:
-            scale(.92);
-
-    }
-
-    50% {
-
-        transform:
-            scale(1.05);
-
-    }
-
+    0%, 100% { transform: scale(.92); }
+    50% { transform: scale(1.05); }
 }
-
 
 .granted-title {
-
-    font-size:
-        clamp(
-            45px,
-            8vw,
-            100px
-        );
-
+    font-size: clamp(45px, 8vw, 100px);
     font-weight: 900;
-
     letter-spacing: 8px;
-
     color: #00ffae;
-
-    text-shadow:
-
-        0 0 15px
-        #00ffae,
-
-        0 0 45px
-        rgba(0,255,174,.55);
-
+    text-shadow: 0 0 15px #00ffae, 0 0 45px rgba(0,255,174,.55);
 }
-
 
 .granted-subtitle {
-
     margin-top: 18px;
-
     font-size: 12px;
-
     letter-spacing: 5px;
-
-    color:
-        rgba(255,255,255,.55);
-
+    color: rgba(255,255,255,.55);
 }
-
-
-/* =========================================================
-   BANNER
-========================================================= */
 
 .banner {
-
     position: fixed;
-
     inset: 0;
-
     z-index: 40;
-
     background: #000;
-
     opacity: 0;
-
     visibility: hidden;
-
-    transition:
-        opacity 1.2s ease;
-
+    transition: opacity 1.2s ease;
 }
-
 
 .banner.active {
-
     opacity: 1;
-
     visibility: visible;
-
 }
-
 
 .banner-video {
-
     position: absolute;
-
     inset: 0;
-
     width: 100%;
     height: 100%;
-
     object-fit: cover;
-
     background: #000;
-
+    transition: opacity 0.6s ease;
 }
-
-
-/* =========================================================
-   BANNER OVERLAY
-========================================================= */
 
 .banner::after {
-
     content: "";
-
     position: absolute;
-
     inset: 0;
-
     pointer-events: none;
-
-    background:
-
-        linear-gradient(
-            rgba(0,0,0,.08),
-            rgba(0,0,0,.12)
-        );
-
+    background: linear-gradient(rgba(0,0,0,.08), rgba(0,0,0,.12));
 }
-
-
-/* =========================================================
-   AUDIO ACTIVATION
-========================================================= */
 
 .audio-start {
-
     position: fixed;
-
     inset: 0;
-
     z-index: 100;
-
     display: flex;
-
     align-items: center;
-
     justify-content: center;
-
-    background:
-
-        radial-gradient(
-            circle at center,
-            rgba(0,80,120,.12),
-            #000 55%
-        );
-
+    background: radial-gradient(circle at center, rgba(0,80,120,.12), #000 55%);
 }
-
 
 .audio-start.hide {
-
     display: none;
-
 }
-
 
 .audio-box {
-
-    width:
-        min(
-            520px,
-            90vw
-        );
-
-    padding:
-        45px 35px;
-
+    width: min(520px, 90vw);
+    padding: 45px 35px;
     text-align: center;
-
-    border:
-        1px solid
-        rgba(0,217,255,.3);
-
-    background:
-        rgba(0,10,16,.88);
-
-    box-shadow:
-
-        0 0 35px
-        rgba(0,217,255,.08),
-
-        inset 0 0 30px
-        rgba(0,217,255,.025);
-
+    border: 1px solid rgba(0,217,255,.3);
+    background: rgba(0,10,16,.88);
+    box-shadow: 0 0 35px rgba(0,217,255,.08), inset 0 0 30px rgba(0,217,255,.025);
 }
-
 
 .audio-box h1 {
-
     margin: 0;
-
-    font-size:
-        clamp(
-            28px,
-            5vw,
-            52px
-        );
-
+    font-size: clamp(28px, 5vw, 52px);
     letter-spacing: 5px;
-
     color: #00d9ff;
-
 }
-
 
 .audio-box p {
-
-    margin:
-        15px 0 30px;
-
+    margin: 15px 0 30px;
     font-size: 10px;
-
     letter-spacing: 4px;
-
-    color:
-        rgba(255,255,255,.5);
-
+    color: rgba(255,255,255,.5);
 }
-
 
 .audio-box button {
-
-    padding:
-        14px 28px;
-
-    border:
-        1px solid
-        #00d9ff;
-
-    background:
-        rgba(0,217,255,.05);
-
+    padding: 14px 28px;
+    border: 1px solid #00d9ff;
+    background: rgba(0,217,255,.05);
     color: white;
-
     font-size: 11px;
-
     letter-spacing: 3px;
-
     cursor: pointer;
-
-    transition:
-        .25s ease;
-
+    transition: .25s ease;
 }
-
 
 .audio-box button:hover {
-
-    background:
-        rgba(0,217,255,.15);
-
-    box-shadow:
-        0 0 20px
-        rgba(0,217,255,.3);
-
+    background: rgba(0,217,255,.15);
+    box-shadow: 0 0 20px rgba(0,217,255,.3);
 }
-
-
-/* =========================================================
-   PARTICLES
-========================================================= */
 
 .particle {
-
     position: fixed;
-
     bottom: -10px;
-
     width: 2px;
     height: 2px;
-
     border-radius: 50%;
-
     background: #00d9ff;
-
     opacity: .35;
-
     z-index: 3;
-
-    animation:
-        particleMove
-        linear infinite;
-
+    animation: particleMove linear infinite;
 }
-
 
 @keyframes particleMove {
-
-    from {
-
-        transform:
-            translateY(0);
-
-        opacity: 0;
-
-    }
-
-    15% {
-
-        opacity: .4;
-
-    }
-
-    85% {
-
-        opacity: .4;
-
-    }
-
-    to {
-
-        transform:
-            translateY(-110vh);
-
-        opacity: 0;
-
-    }
-
+    from { transform: translateY(0); opacity: 0; }
+    15% { opacity: .4; }
+    85% { opacity: .4; }
+    to { transform: translateY(-110vh); opacity: 0; }
 }
-
-
-/* =========================================================
-   RESPONSIVE
-========================================================= */
 
 @media (max-width: 700px) {
-
-    .connection {
-
-        top: 14px;
-
-        font-size: 7px;
-
-        letter-spacing: 2px;
-
-    }
-
-    .lock-title {
-
-        letter-spacing: 4px;
-
-    }
-
-    .lock-subtitle {
-
-        letter-spacing: 3px;
-
-    }
-
-    .auth-title {
-
-        letter-spacing: 4px;
-
-    }
-
-    .auth-small {
-
-        letter-spacing: 2px;
-
-    }
-
-    .granted-title {
-
-        letter-spacing: 4px;
-
-    }
-
+    .connection { top: 14px; font-size: 7px; letter-spacing: 2px; }
+    .lock-title { letter-spacing: 4px; }
+    .lock-subtitle { letter-spacing: 3px; }
+    .auth-title { letter-spacing: 4px; }
+    .auth-small { letter-spacing: 2px; }
+    .granted-title { letter-spacing: 4px; }
 }
-
 </style>
-
 </head>
-
 
 <body>
 
-
-<!-- =======================================================
-     AMBIENT BACKGROUND
-======================================================= -->
-
 <div class="ambient"></div>
-
 <div class="grid"></div>
 
+<div class="connection" id="connection">SYSTEM STANDBY</div>
 
-<!-- =======================================================
-     CONNECTION
-======================================================= -->
-
-<div
-    class="connection"
-    id="connection">
-
-    SYSTEM STANDBY
-
-</div>
-
-
-<!-- =======================================================
-     LOCK SCREEN
-======================================================= -->
-
-<section
-    class="lock"
-    id="lockScreen">
-
+<!-- LOCK SCREEN -->
+<section class="lock" id="lockScreen">
     <div class="lock-content">
-
-
-        <div class="lock-icon">
-
-            🔒
-
-        </div>
-
-
-        <div class="lock-title">
-
-            AKSES DITUTUP
-
-        </div>
-
-
+        <div class="lock-icon">🔒</div>
+        <div class="lock-title">AKSES DITUTUP</div>
         <div class="lock-line"></div>
-
-
-        <div class="lock-subtitle">
-
-            SAFE SK ABANG GESA 2026
-
-        </div>
-
-
-        <div class="lock-subtitle">
-
-            CEREMONY DISPLAY SYSTEM
-
-        </div>
-
+        <div class="lock-subtitle">SAFE SK ABANG GESA 2026</div>
+        <div class="lock-subtitle">CEREMONY DISPLAY SYSTEM</div>
     </div>
-
 </section>
 
-
-<!-- =======================================================
-     AUTHENTICATING
-======================================================= -->
-
-<section
-    class="auth"
-    id="authScreen">
-
+<!-- AUTHENTICATING SCREEN -->
+<section class="auth" id="authScreen">
     <div class="auth-inner">
-
-
         <div class="auth-ring">
-
-            <div class="auth-core">
-
-                🖐
-
-            </div>
-
+            <div class="auth-core">🖐</div>
         </div>
-
-
-        <div class="auth-title">
-
-            AUTHENTICATING
-
-        </div>
-
-
-        <div
-            class="auth-small"
-            id="authSmall">
-
-            GESTURE SIGNAL RECEIVED
-
-        </div>
-
-
-        <div class="auth-signal">
-
-            PALM BIOMETRIC SIGNAL PROCESSING
-
-        </div>
-
+        <div class="auth-title">AUTHENTICATING</div>
+        <div class="auth-small" id="authSmall">GESTURE SIGNAL RECEIVED</div>
+        <div class="auth-signal">PALM BIOMETRIC SIGNAL PROCESSING</div>
     </div>
-
 </section>
 
-
-<!-- =======================================================
-     ACCESS GRANTED
-======================================================= -->
-
-<section
-    class="granted"
-    id="grantedScreen">
-
+<!-- ACCESS GRANTED SCREEN -->
+<section class="granted" id="grantedScreen">
     <div class="granted-content">
-
-
-        <div class="granted-symbol">
-
-            ✓
-
-        </div>
-
-
-        <div class="granted-title">
-
-            ACCESS GRANTED
-
-        </div>
-
-
-        <div class="granted-subtitle">
-
-            AUTHENTICATION SUCCESSFUL
-
-        </div>
-
+        <div class="granted-symbol">✓</div>
+        <div class="granted-title">ACCESS GRANTED</div>
+        <div class="granted-subtitle">AUTHENTICATION SUCCESSFUL</div>
     </div>
-
 </section>
 
-
-<!-- =======================================================
-     BANNER VIDEO
-======================================================= -->
-
-<section
-    class="banner"
-    id="banner">
-
+<section class="banner" id="banner">
+    <!-- VIDEO 1: BANNER PERASMIAN -->
     <video
         id="bannerVideo"
         class="banner-video"
         src="banner.mp4"
         playsinline
         preload="auto">
-
     </video>
 
+    <!-- VIDEO 2: LAGU PERASMIAN (SELEPAS BANNER) -->
+    <video
+        id="songVideo"
+        class="banner-video"
+        src="lagu.mp4"
+        playsinline
+        preload="auto"
+        style="display: none; opacity: 0;">
+    </video>
 </section>
 
-
-<!-- =======================================================
-     AUDIO ACTIVATION
-======================================================= -->
-
-<section
-    class="audio-start"
-    id="audioStart">
-
+<!-- AUDIO ACTIVATION MODAL -->
+<section class="audio-start" id="audioStart">
     <div class="audio-box">
-
-        <h1>
-            SAFE 2026
-        </h1>
-
-
-        <p>
-            CEREMONY DISPLAY SYSTEM
-        </p>
-
-
-        <button
-            id="activateAudio">
-
-            ACTIVATE DISPLAY
-
-        </button>
-
+        <h1>SAFE 2026</h1>
+        <p>CEREMONY DISPLAY SYSTEM</p>
+        <button id="activateAudio">ACTIVATE DISPLAY</button>
     </div>
-
 </section>
 
-
-<!-- =======================================================
-     FIREBASE
-======================================================= -->
-
+<!-- FIREBASE LIBRARIES -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
-
 <script>
-
-/* =========================================================
-   FIREBASE CONFIGURATION
-========================================================= */
-
 const firebaseConfig = {
-
-    apiKey:
-        "AIzaSyDNlFEnA9ZGLFTFCuwMK5ZMzv3D8Ww2BAo",
-
-    authDomain:
-        "smppro-2845e.firebaseapp.com",
-
-    databaseURL:
-        "https://smppro-2845e-default-rtdb.asia-southeast1.firebasedatabase.app",
-
-    projectId:
-        "smppro-2845e",
-
-    storageBucket:
-        "smppro-2845e.firebasestorage.app",
-
-    messagingSenderId:
-        "488762363336",
-
-    appId:
-        "1:488762363336:web:da4ccbb41c1236eaf184fd",
-
-    measurementId:
-        "G-NZR5BXZKR1"
-
+    apiKey: "AIzaSyDNlFEnA9ZGLFTFCuwMK5ZMzv3D8Ww2BAo",
+    authDomain: "smppro-2845e.firebaseapp.com",
+    databaseURL: "https://smppro-2845e-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "smppro-2845e",
+    storageBucket: "smppro-2845e.firebasestorage.app",
+    messagingSenderId: "488762363336",
+    appId: "1:488762363336:web:da4ccbb41c1236eaf184fd",
+    measurementId: "G-NZR5BXZKR1"
 };
 
-
-/* =========================================================
-   FIREBASE
-========================================================= */
-
 let db = null;
-
 let accessRef = null;
-
 let firebaseReady = false;
 
-
 try {
-
-    firebase.initializeApp(
-        firebaseConfig
-    );
-
-    db =
-        firebase.database();
-
-    /*
-       Path mesti sama dengan
-       index.html
-    */
-
-    accessRef =
-        db.ref("safe/access");
-
+    firebase.initializeApp(firebaseConfig);
+    db = firebase.database();
+    accessRef = db.ref("safe/access");
     firebaseReady = true;
-
-    console.log(
-        "Firebase: ONLINE"
-    );
-
+    console.log("Firebase: ONLINE");
+} catch (error) {
+    console.error("Firebase initialization error:", error);
 }
 
-catch (error) {
-
-    console.error(
-        "Firebase initialization error:",
-        error
-    );
-
-}
-
-
-/* =========================================================
-   ELEMENTS
-========================================================= */
-
-const lockScreen =
-    document.getElementById(
-        "lockScreen"
-    );
-
-const authScreen =
-    document.getElementById(
-        "authScreen"
-    );
-
-const grantedScreen =
-    document.getElementById(
-        "grantedScreen"
-    );
-
-const banner =
-    document.getElementById(
-        "banner"
-    );
-
-const audioStart =
-    document.getElementById(
-        "audioStart"
-    );
-
-const activateAudio =
-    document.getElementById(
-        "activateAudio"
-    );
-
-const connection =
-    document.getElementById(
-        "connection"
-    );
-
-const authSmall =
-    document.getElementById(
-        "authSmall"
-    );
-
-const bannerVideo =
-    document.getElementById(
-        "bannerVideo"
-    );
-
-
-/* =========================================================
-   AUDIO
-========================================================= */
+const lockScreen = document.getElementById("lockScreen");
+const authScreen = document.getElementById("authScreen");
+const grantedScreen = document.getElementById("grantedScreen");
+const banner = document.getElementById("banner");
+const audioStart = document.getElementById("audioStart");
+const activateAudio = document.getElementById("activateAudio");
+const connection = document.getElementById("connection");
+const authSmall = document.getElementById("authSmall");
+const bannerVideo = document.getElementById("bannerVideo");
+const songVideo = document.getElementById("songVideo");
 
 let audioContext = null;
-
 let approvedAudio = null;
 
-
-/* =========================================================
-   INITIALIZE AUDIO
-========================================================= */
-
 function initAudio() {
-
     if (!audioContext) {
-
-        audioContext =
-            new (
-                window.AudioContext ||
-                window.webkitAudioContext
-            )();
-
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
     }
-
-
-    if (
-        audioContext.state ===
-        "suspended"
-    ) {
-
+    if (audioContext.state === "suspended") {
         audioContext.resume();
-
     }
-
 }
 
-
-/* =========================================================
-   SYNTHETIC TONE
-========================================================= */
-
-function tone(
-    frequency,
-    duration = .2,
-    type = "sine",
-    volume = .08
-) {
-
-    if (!audioContext)
-        return;
-
-
-    const oscillator =
-        audioContext
-            .createOscillator();
-
-    const gain =
-        audioContext
-            .createGain();
-
-
-    oscillator.type =
-        type;
-
-    oscillator.frequency.value =
-        frequency;
-
-
-    gain.gain.setValueAtTime(
-        volume,
-        audioContext.currentTime
-    );
-
-
-    gain.gain.exponentialRampToValueAtTime(
-
-        .001,
-
-        audioContext.currentTime +
-        duration
-
-    );
-
-
-    oscillator.connect(gain);
-
-    gain.connect(
-        audioContext.destination
-    );
-
-
-    oscillator.start();
-
-    oscillator.stop(
-
-        audioContext.currentTime +
-        duration
-
-    );
-
+function tone(frequency, duration = .2, type = "sine", volume = .08) {
+    if (!audioContext) return;
+    try {
+        const oscillator = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+        oscillator.type = type;
+        oscillator.frequency.value = frequency;
+        gain.gain.setValueAtTime(volume, audioContext.currentTime);
+        gain.gain.exponentialRampToValueAtTime(.001, audioContext.currentTime + duration);
+        oscillator.connect(gain);
+        gain.connect(audioContext.destination);
+        oscillator.start();
+        oscillator.stop(audioContext.currentTime + duration);
+    } catch (e) {
+        console.warn("Audio tone error:", e);
+    }
 }
-
-
-/* =========================================================
-   LOCK SOUND
-========================================================= */
 
 function lockSound() {
-
-    tone(
-        180,
-        .15,
-        "square",
-        .08
-    );
-
-
-    setTimeout(
-        () => {
-
-            tone(
-                120,
-                .3,
-                "sine",
-                .05
-            );
-
-        },
-        150
-    );
-
+    tone(180, .15, "square", .08);
+    setTimeout(() => { tone(120, .3, "sine", .05); }, 150);
 }
-
-
-/* =========================================================
-   AUTHENTICATING SOUND
-========================================================= */
 
 function authenticateSound() {
-
-    tone(
-        500,
-        .08,
-        "square",
-        .04
-    );
-
-
-    setTimeout(
-        () => {
-
-            tone(
-                700,
-                .08,
-                "square",
-                .05
-            );
-
-        },
-        120
-    );
-
-
-    setTimeout(
-        () => {
-
-            tone(
-                900,
-                .1,
-                "square",
-                .04
-            );
-
-        },
-        260
-    );
-
+    tone(500, .08, "square", .04);
+    setTimeout(() => { tone(700, .08, "square", .05); }, 120);
+    setTimeout(() => { tone(900, .1, "square", .04); }, 260);
 }
-
-
-/* =========================================================
-   GRANTED SOUND
-========================================================= */
 
 function grantedSound() {
-
-    tone(
-        550,
-        .12,
-        "sine",
-        .08
-    );
-
-
-    setTimeout(
-        () => {
-
-            tone(
-                800,
-                .12,
-                "sine",
-                .09
-            );
-
-        },
-        130
-    );
-
-
-    setTimeout(
-        () => {
-
-            tone(
-                1200,
-                .4,
-                "sine",
-                .1
-            );
-
-        },
-        260
-    );
-
+    tone(550, .12, "sine", .08);
+    setTimeout(() => { tone(800, .12, "sine", .09); }, 130);
+    setTimeout(() => { tone(1200, .4, "sine", .1); }, 260);
 }
-
-
-/* =========================================================
-   PRELOAD APPROVED AUDIO
-========================================================= */
 
 function prepareApprovedAudio() {
-
-    if (approvedAudio)
-        return;
-
-
-    approvedAudio =
-        new Audio(
-            "approved.mp3"
-        );
-
-
-    approvedAudio.preload =
-        "auto";
-
-    approvedAudio.volume =
-        1;
-
-
+    if (approvedAudio) return;
+    approvedAudio = new Audio("approved.mp3");
+    approvedAudio.preload = "auto";
+    approvedAudio.volume = 1;
     approvedAudio.load();
-
 }
-
-
-/* =========================================================
-   PLAY APPROVED VOICE
-========================================================= */
 
 function playApprovedVoice() {
-
-    return new Promise(
-        resolve => {
-
-            prepareApprovedAudio();
-
-
-            if (!approvedAudio) {
-
-                resolve(false);
-
-                return;
-
-            }
-
-
-            approvedAudio.pause();
-
-            approvedAudio.currentTime =
-                0;
-
-
-            approvedAudio.onended =
-                () => {
-
-                    resolve(true);
-
-                };
-
-
-            approvedAudio.onerror =
-                error => {
-
-                    console.warn(
-                        "approved.mp3 tidak dapat dimainkan.",
-                        error
-                    );
-
-                    resolve(false);
-
-                };
-
-
-            const playPromise =
-                approvedAudio.play();
-
-
-            if (playPromise) {
-
-                playPromise.catch(
-                    error => {
-
-                        console.warn(
-                            "approved.mp3 autoplay blocked.",
-                            error
-                        );
-
-                        resolve(false);
-
-                    }
-                );
-
-            }
-
+    return new Promise(resolve => {
+        prepareApprovedAudio();
+        if (!approvedAudio) {
+            resolve(false);
+            return;
         }
-    );
-
+        approvedAudio.pause();
+        approvedAudio.currentTime = 0;
+        approvedAudio.onended = () => { resolve(true); };
+        approvedAudio.onerror = error => {
+            console.warn("approved.mp3 tidak dapat dimainkan.", error);
+            resolve(false);
+        };
+        const playPromise = approvedAudio.play();
+        if (playPromise) {
+            playPromise.catch(error => {
+                console.warn("approved.mp3 autoplay blocked.", error);
+                resolve(false);
+            });
+        }
+    });
 }
 
-
-/* =========================================================
-   ACTIVATE DISPLAY
-========================================================= */
-
-activateAudio.addEventListener(
-    "click",
-    () => {
-
-        /*
-           Ini penting untuk membenarkan
-           browser TV memainkan audio.
-        */
-
-        initAudio();
-
-        lockSound();
-
-        prepareApprovedAudio();
-
-
-        /*
-           Sembunyikan activation screen.
-        */
-
-        audioStart.classList.add(
-            "hide"
-        );
-
-
-        connection.innerText =
-            "SYSTEM READY";
-
-
-        console.log(
-            "Display activated."
-        );
-
-    }
-);
-
-
-/* =========================================================
-   EVENT STATE
-========================================================= */
+activateAudio.addEventListener("click", () => {
+    initAudio();
+    lockSound();
+    prepareApprovedAudio();
+    audioStart.classList.add("hide");
+    connection.innerText = "SYSTEM READY";
+    console.log("Display activated.");
+});
 
 let lastEventId = null;
-
 let ceremonyRunning = false;
+const displayStartedAt = Date.now();
 
+/* EVENT LISTENER: Sejurus selepas banner.mp4 selesai dimainkan, mainkan lagu.mp4 */
+bannerVideo.addEventListener("ended", async () => {
+    console.log("banner.mp4 tamat. Memulakan lagu.mp4...");
+    connection.innerText = "PLAYING LAGU SAFE 2026";
+    
+    // Sembunyikan bannerVideo dan tunjukkan songVideo
+    bannerVideo.style.opacity = "0";
+    setTimeout(() => {
+        bannerVideo.style.display = "none";
+        songVideo.style.display = "block";
+        songVideo.currentTime = 0;
+        songVideo.muted = false;
+        
+        // Transisi kemas ke songVideo
+        requestAnimationFrame(() => {
+            songVideo.style.opacity = "1";
+        });
 
-/*
-   Masa display mula.
+        songVideo.play().catch(err => {
+            console.warn("songVideo (lagu.mp4) blocked, cuba muted:", err);
+            songVideo.muted = true;
+            songVideo.play().catch(e => console.error("songVideo failed entirely:", e));
+        });
+    }, 300);
+});
 
-   Event lama tidak akan
-   dimainkan semula ketika TV
-   baru sahaja dibuka.
-*/
+/* FUNGSI KUNCI SEMULA (RE-LOCK RESET) */
+function relockDisplay() {
+    ceremonyRunning = false;
+    lastEventId = null;
 
-const displayStartedAt =
-    Date.now();
+    bannerVideo.pause();
+    bannerVideo.currentTime = 0;
+    bannerVideo.style.display = "block";
+    bannerVideo.style.opacity = "1";
 
+    songVideo.pause();
+    songVideo.currentTime = 0;
+    songVideo.style.display = "none";
+    songVideo.style.opacity = "0";
 
-/* =========================================================
-   RECEIVE ACCESS SIGNAL
-========================================================= */
+    banner.classList.remove("active");
+    grantedScreen.classList.remove("active");
+    authScreen.classList.remove("active");
+    lockScreen.classList.remove("hide");
 
-async function receiveAccessSignal(
-    data = {}
-) {
+    connection.innerText = "SYSTEM STANDBY";
+}
 
-    /*
-       Jangan proses dua kali.
-    */
+/* PROCESS ACCESS SIGNAL FROM GESTURE CONTROLLER */
+async function receiveAccessSignal(data = {}) {
+    if (ceremonyRunning) return;
 
-    if (ceremonyRunning)
-        return;
+    const eventId = data.eventId || String(Date.now());
+    if (eventId === lastEventId) return;
 
+    lastEventId = eventId;
+    ceremonyRunning = true;
 
-    const eventId =
-        data.eventId ||
-        String(Date.now());
+    console.log("ACCESS SIGNAL RECEIVED:", data);
+    connection.innerText = "ACCESS SIGNAL RECEIVED";
 
+    // STEP 1: AUTHENTICATING
+    lockScreen.classList.add("hide");
+    authScreen.classList.add("active");
+    grantedScreen.classList.remove("active");
+    banner.classList.remove("active");
 
-    /*
-       Elak event yang sama
-       dimainkan berulang kali.
-    */
+    // Reset video state
+    bannerVideo.style.display = "block";
+    bannerVideo.style.opacity = "1";
+    songVideo.style.display = "none";
+    songVideo.style.opacity = "0";
 
-    if (
-        eventId ===
-        lastEventId
-    ) {
-
-        return;
-
-    }
-
-
-    lastEventId =
-        eventId;
-
-
-    ceremonyRunning =
-        true;
-
-
-    console.log(
-        "ACCESS SIGNAL RECEIVED:",
-        data
-    );
-
-
-    connection.innerText =
-        "ACCESS SIGNAL RECEIVED";
-
-
-    /* =====================================================
-       STEP 1
-       AUTHENTICATING
-    ===================================================== */
-
-    lockScreen.classList.add(
-        "hide"
-    );
-
-
-    authScreen.classList.add(
-        "active"
-    );
-
-
-    grantedScreen.classList.remove(
-        "active"
-    );
-
-
-    banner.classList.remove(
-        "active"
-    );
-
-
-    authSmall.innerText =
-        "GESTURE SIGNAL RECEIVED";
-
-
+    authSmall.innerText = "GESTURE SIGNAL RECEIVED";
     authenticateSound();
 
+    await delay(1800);
 
-    /*
-       Biometric processing
-       animation.
-    */
+    // STEP 2: PALM BIOMETRIC SIGNAL RECEIVED
+    authSmall.innerText = "AUTHENTICATION PALM BIOMETRIC SIGNAL RECEIVED";
+    connection.innerText = "PALM BIOMETRIC SIGNAL RECEIVED";
+    await delay(500);
 
-    await delay(
-        1800
-    );
-
-
-    /* =====================================================
-       STEP 2
-       PALM BIOMETRIC SIGNAL RECEIVED
-    ===================================================== */
-
-    authSmall.innerText =
-        "AUTHENTICATION PALM BIOMETRIC SIGNAL RECEIVED";
-
-
-    connection.innerText =
-        "PALM BIOMETRIC SIGNAL RECEIVED";
-
-
-    /*
-       Beri sedikit masa supaya
-       mesej jelas kelihatan
-       sebelum suara bermula.
-    */
-
-    await delay(
-        500
-    );
-
-
-    /* =====================================================
-       STEP 3
-       PLAY approved.mp3
-    ===================================================== */
-
-    const voicePlayed =
-        await playApprovedVoice();
-
-
-    /*
-       Jika audio gagal dimainkan,
-       jangan hentikan ceremony.
-    */
-
+    // STEP 3: PLAY approved.mp3 VOICE
+    const voicePlayed = await playApprovedVoice();
     if (!voicePlayed) {
-
-        console.warn(
-            "approved.mp3 gagal dimainkan. Teruskan ceremony."
-        );
-
-        await delay(
-            1000
-        );
-
+        console.warn("approved.mp3 gagal dimainkan. Teruskan ceremony.");
+        await delay(1000);
     }
 
-
-    /* =====================================================
-       STEP 4
-       ACCESS GRANTED
-    ===================================================== */
-
-    authScreen.classList.remove(
-        "active"
-    );
-
-
-    grantedScreen.classList.add(
-        "active"
-    );
-
-
-    connection.innerText =
-        "AUTHENTICATION SUCCESSFUL";
-
-
+    // STEP 4: ACCESS GRANTED
+    authScreen.classList.remove("active");
+    grantedScreen.classList.add("active");
+    connection.innerText = "AUTHENTICATION SUCCESSFUL";
     grantedSound();
+    await delay(1800);
 
+    // STEP 5: BANNER VIDEO
+    grantedScreen.classList.remove("active");
+    banner.classList.add("active");
+    connection.innerText = "CEREMONY DISPLAY ACTIVE";
 
-    await delay(
-        1800
-    );
-
-
-    /* =====================================================
-       STEP 5
-       BANNER VIDEO
-    ===================================================== */
-
-    grantedScreen.classList.remove(
-        "active"
-    );
-
-
-    banner.classList.add(
-        "active"
-    );
-
-
-    connection.innerText =
-        "CEREMONY DISPLAY ACTIVE";
-
-
-    /*
-       Reset video.
-    */
-
-    bannerVideo.currentTime =
-        0;
-
-
-    /*
-       Pastikan video tidak muted.
-    */
-
-    bannerVideo.muted =
-        false;
-
+    bannerVideo.currentTime = 0;
+    bannerVideo.muted = false;
 
     try {
-
         await bannerVideo.play();
-
-    }
-
-    catch (error) {
-
-        console.warn(
-            "Banner video autoplay blocked:",
-            error
-        );
-
-
-        /*
-           Fallback.
-
-           Jika browser TV menghalang
-           audio video, video masih
-           boleh dimainkan secara muted.
-        */
-
+    } catch (error) {
+        console.warn("Banner video autoplay blocked:", error);
         try {
-
-            bannerVideo.muted =
-                true;
-
+            bannerVideo.muted = true;
             await bannerVideo.play();
-
+        } catch (fallbackError) {
+            console.error("Banner video failed:", fallbackError);
         }
-
-        catch (fallbackError) {
-
-            console.error(
-                "Banner video failed:",
-                fallbackError
-            );
-
-        }
-
     }
-
 }
 
-
-/* =========================================================
-   DELAY HELPER
-========================================================= */
-
-function delay(
-    milliseconds
-) {
-
-    return new Promise(
-        resolve =>
-            setTimeout(
-                resolve,
-                milliseconds
-            )
-    );
-
+function delay(milliseconds) {
+    return new Promise(resolve => setTimeout(resolve, milliseconds));
 }
 
+if (firebaseReady && accessRef) {
+    accessRef.on("value", snapshot => {
+        const data = snapshot.val();
+        if (!data) return;
 
-/* =========================================================
-   FIREBASE LISTENER
-========================================================= */
-
-if (
-    firebaseReady &&
-    accessRef
-) {
-
-    accessRef.on(
-
-        "value",
-
-        snapshot => {
-
-            const data =
-                snapshot.val();
-
-
-            if (!data)
-                return;
-
-
-            /*
-               Hanya event OPENED.
-            */
-
-            if (
-                data.status !==
-                "opened"
-            ) {
-
-                return;
-
-            }
-
-
-            /*
-               Event mesti mempunyai
-               eventId.
-            */
-
-            if (!data.eventId)
-                return;
-
-
-            /*
-               Semak timestamp.
-
-               Event yang sudah wujud lama
-               tidak dimainkan ketika TV
-               baru dibuka.
-            */
-
-            const eventTime =
-                Number(
-                    data.timestamp ||
-                    0
-                );
-
-
-            if (
-                eventTime &&
-                eventTime <
-                (
-                    displayStartedAt -
-                    15000
-                )
-            ) {
-
-                console.log(
-                    "Old Firebase event ignored:",
-                    data.eventId
-                );
-
-                return;
-
-            }
-
-
-            receiveAccessSignal(
-                data
-            );
-
-        },
-
-        error => {
-
-            console.error(
-                "Firebase listener error:",
-                error
-            );
-
-
-            connection.innerText =
-                "FIREBASE ERROR";
-
+        // Jika arahan "locked" diterima dari Controller
+        if (data.status === "locked") {
+            console.log("Kunci semula diterima daripada Controller.");
+            relockDisplay();
+            return;
         }
 
-    );
+        if (data.status !== "opened") return;
+        if (!data.eventId) return;
 
+        const eventTime = Number(data.timestamp || 0);
+        if (eventTime && eventTime < (displayStartedAt - 15000)) {
+            console.log("Old Firebase event ignored:", data.eventId);
+            return;
+        }
+
+        receiveAccessSignal(data);
+    }, error => {
+        console.error("Firebase listener error:", error);
+        connection.innerText = "FIREBASE ERROR";
+    });
+} else {
+    connection.innerText = "FIREBASE NOT READY";
 }
 
-else {
-
-    connection.innerText =
-        "FIREBASE NOT READY";
-
+for (let i = 0; i < 50; i++) {
+    const particle = document.createElement("div");
+    particle.className = "particle";
+    particle.style.left = Math.random() * 100 + "%";
+    particle.style.animationDelay = Math.random() * 7 + "s";
+    particle.style.animationDuration = (4 + Math.random() * 7) + "s";
+    document.body.appendChild(particle);
 }
 
-
-/* =========================================================
-   PARTICLES
-========================================================= */
-
-for (
-    let i = 0;
-    i < 50;
-    i++
-) {
-
-    const particle =
-        document.createElement(
-            "div"
-        );
-
-
-    particle.className =
-        "particle";
-
-
-    particle.style.left =
-        Math.random() *
-        100 +
-        "%";
-
-
-    particle.style.animationDelay =
-        Math.random() *
-        7 +
-        "s";
-
-
-    particle.style.animationDuration =
-        4 +
-        Math.random() *
-        7 +
-        "s";
-
-
-    document.body.appendChild(
-        particle
-    );
-
-}
-
-
-/* =========================================================
-   INITIAL STATE
-========================================================= */
-
-lockScreen.classList.remove(
-    "hide"
-);
-
-authScreen.classList.remove(
-    "active"
-);
-
-grantedScreen.classList.remove(
-    "active"
-);
-
-banner.classList.remove(
-    "active"
-);
-
-
-connection.innerText =
-    "SYSTEM STANDBY";
-
-
-/* =========================================================
-   VIDEO PRELOAD
-========================================================= */
+lockScreen.classList.remove("hide");
+authScreen.classList.remove("active");
+grantedScreen.classList.remove("active");
+banner.classList.remove("active");
+connection.innerText = "SYSTEM STANDBY";
 
 bannerVideo.load();
-
-
+songVideo.load();
 </script>
 
 </body>
