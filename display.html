@@ -896,12 +896,15 @@ body {
     id="banner">
 
     <div class="banner-content">
-        <img
-            id="bannerImage"
-            class="banner-image"
+        <video
+            id="bannerVideo"
+            class="banner-image banner-video"
             src="banner.mp4"
-            alt="SAFE SK Abang Gesa 2026"
-        >
+            muted
+            playsinline
+            preload="auto"
+            aria-label="SAFE SK Abang Gesa 2026"
+        ></video>
     </div>
 
 </section>
@@ -1190,6 +1193,7 @@ let ceremonyRunning = false;
 // Ini mengelakkan banner lama daripada dimainkan semula ketika display
 // baru sahaja dimuatkan.
 const displayStartedAt = Date.now();
+const bannerVideo = document.getElementById("bannerVideo");
 
 function receiveAccessSignal(data = {}) {
 
@@ -1222,6 +1226,12 @@ function receiveAccessSignal(data = {}) {
         grantedScreen.classList.remove("active");
         lockScreen.classList.add("hide");
         banner.classList.add("active");
+
+        // Mulakan video tepat ketika banner dipaparkan.
+        bannerVideo.currentTime = 0;
+        bannerVideo.play().catch(err => {
+            console.warn("Banner video play failed:", err);
+        });
 
         connection.innerText = "CEREMONY DISPLAY ACTIVE";
 
