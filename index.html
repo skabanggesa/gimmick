@@ -2164,176 +2164,145 @@ function initializeHands() {
 }
 
 
-/* =========================================================
-   GESTURE RESULT
-========================================================= */
-
 function onResults(results) {
 
-    if (opened)
+    // Pastikan semua elemen UI wujud
+    if (
+        !handStatus ||
+        !gestureStatus ||
+        !statusTitle ||
+        !statusSubtitle
+    ) {
+        console.error(
+            "UI ELEMENT ERROR:",
+            {
+                handStatus,
+                gestureStatus,
+                statusTitle,
+                statusSubtitle
+            }
+        );
+
         return;
+    }
 
 
-    /*
-       Tiada tangan
-    */
+    /* =====================================================
+       NO HAND DETECTED
+    ===================================================== */
 
     if (
         !results.multiHandLandmarks ||
-        results.multiHandLandmarks
-            .length === 0
+        results.multiHandLandmarks.length === 0
     ) {
 
-        handStatus.innerText =
-            "NOT DETECTED";
+        handStatus.innerText = "NOT DETECTED";
 
+        gestureStatus.innerText = "STANDBY";
 
-        gestureStatus.innerText =
-            "STANDBY";
-
-
-        statusTitle.innerText =
-            "GESTURE READY";
-
+        statusTitle.innerText = "GESTURE READY";
 
         statusSubtitle.innerText =
             "PLACE YOUR PALM INSIDE THE SCAN AREA";
 
-
-        centerIcon.innerText =
-            "✋";
-
-
         palmStart = 0;
 
-
         return;
-
     }
 
 
-    /*
-       Tangan dikesan
-    */
+    /* =====================================================
+       HAND DETECTED
+    ===================================================== */
 
     const landmarks =
-        results
-            .multiHandLandmarks[0];
+        results.multiHandLandmarks[0];
 
 
     handStatus.innerText =
         "DETECTED";
 
 
-    centerIcon.innerText =
-        "🖐";
-
-
     const fingers =
-        countOpenFingers(
-            landmarks
-        );
+        countOpenFingers(landmarks);
 
 
-    /*
-       4 atau 5 jari terbuka
-       dianggap sebagai OPEN PALM
-    */
+    /* =====================================================
+       OPEN PALM
+    ===================================================== */
 
     if (fingers >= 4) {
 
         gestureStatus.innerText =
             "SCANNING";
 
-
         statusTitle.innerText =
             "ANALYZING PALM";
 
-
         statusSubtitle.innerText =
             "BIOMETRIC GESTURE ANALYSIS";
-
-
-        gestureStatus.style.color =
-            "#00d9ff";
 
 
         const now =
             Date.now();
 
 
-        /*
-           Bunyi scanning
-        */
+        /* SCAN SOUND */
 
         if (
-            now -
-            lastScanSound >
-            280
+            now - lastScanSound > 280
         ) {
 
             scanSound();
 
             lastScanSound =
                 now;
-
         }
 
 
-        /*
-           Mulakan timer
-           pengesahan tapak tangan
-        */
+        /* START PALM TIMER */
 
         if (!palmStart) {
 
             palmStart =
                 now;
-
         }
 
 
-        /*
-           Tapak tangan perlu
-           kekal selama 1.2 saat
-        */
+        /* =================================================
+           PALM MUST REMAIN FOR 1.2 SECONDS
+        ================================================= */
 
         if (
-            now -
-            palmStart >=
-            1200
+            now - palmStart > 1200 &&
+            !opened
         ) {
 
             openAccess();
-
         }
 
     }
+
+
+    /* =====================================================
+       INVALID GESTURE
+    ===================================================== */
 
     else {
 
         gestureStatus.innerText =
             "INVALID";
 
-
         statusTitle.innerText =
             "HAND DETECTED";
-
 
         statusSubtitle.innerText =
             "OPEN PALM REQUIRED";
 
-
-        centerIcon.innerText =
-            "☝";
-
-
         palmStart = 0;
-
     }
 
 }
-
 
 /* =========================================================
    COUNT OPEN FINGERS
