@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>SAFE 2026 — Ceremony Display</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+
+    margin: 0;
+    padding: 0;
+
+    width: 100%;
+    height: 100%;
+
+    overflow: hidden;
+
+    background: #000;
+
+    color: white;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+}
+
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+body {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    position: relative;
+
+}
+
+
+/* =========================================================
+   BACKGROUND
+========================================================= */
+
+.background {
+
+    position: fixed;
+
+    inset: 0;
+
+    background:
+
+        radial-gradient(
+            circle at center,
+            rgba(0,120,190,.16),
+            transparent 45%
+        ),
+
+        #000;
+
+}
+
+
+/* GRID */
+
+.grid {
+
+    position: fixed;
+
+    inset: 0;
+
+    opacity: .12;
+
+    background-image:
+
+        linear-gradient(
+            rgba(0,210,255,.3) 1px,
+            transparent 1px
+        ),
+
+        linear-gradient(
+            90deg,
+            rgba(0,210,255,.3) 1px,
+            transparent 1px
+        );
+
+    background-size: 70px 70px;
+
+}
+
+
+/* =========================================================
+   TOP LABEL
+========================================================= */
+
+.top {
+
+    position: fixed;
+
+    top: 35px;
+
+    left: 50%;
+
+    transform:
+        translateX(-50%);
+
+    text-align: center;
+
+    z-index: 10;
+
+    letter-spacing: 4px;
+
+    font-size: 13px;
+
+    color: #00d9ff;
+
+}
+
+
+/* =========================================================
+   LOCK SCREEN
+========================================================= */
+
+.lock-screen {
+
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 5;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    transition:
+        opacity .8s ease,
+        transform .8s ease;
+
+}
+
+
+.lock-screen.hide {
+
+    opacity: 0;
+
+    transform:
+        scale(1.2);
+
+    pointer-events: none;
+
+}
+
+
+.lock-icon {
+
+    font-size: 110px;
+
+    margin-bottom: 25px;
+
+    filter:
+        drop-shadow(
+            0 0 25px
+            rgba(0,210,255,.8)
+        );
+
+    animation:
+        lockPulse 2s infinite;
+
+}
+
+
+@keyframes lockPulse {
+
+    0%,
+    100% {
+
+        transform:
+            scale(1);
+
+        opacity: .7;
+
+    }
+
+    50% {
+
+        transform:
+            scale(1.08);
+
+        opacity: 1;
+
+    }
+
+}
+
+
+.lock-title {
+
+    font-size:
+        clamp(45px, 7vw, 100px);
+
+    font-weight: 900;
+
+    letter-spacing: 8px;
+
+}
+
+
+.lock-subtitle {
+
+    margin-top: 20px;
+
+    font-size: 15px;
+
+    letter-spacing: 5px;
+
+    opacity: .45;
+
+}
+
+
+/* =========================================================
+   AUTHENTICATING
+========================================================= */
+
+.auth {
+
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 20;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    background: #000;
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    transition: .4s;
+
+}
+
+
+.auth.active {
+
+    opacity: 1;
+
+    visibility: visible;
+
+}
+
+
+.auth-ring {
+
+    width: 240px;
+
+    height: 240px;
+
+    border-radius: 50%;
+
+    border:
+
+        2px solid
+        rgba(0,210,255,.25);
+
+    border-top-color:
+        #00d9ff;
+
+    animation:
+        rotate 1s linear infinite;
+
+}
+
+
+@keyframes rotate {
+
+    to {
+
+        transform:
+            rotate(360deg);
+
+    }
+
+}
+
+
+.auth-inner {
+
+    position: absolute;
+
+}
+
+
+.auth-title {
+
+    font-size: 28px;
+
+    font-weight: 800;
+
+    letter-spacing: 4px;
+
+}
+
+
+.auth-small {
+
+    margin-top: 10px;
+
+    font-size: 12px;
+
+    letter-spacing: 3px;
+
+    opacity: .5;
+
+}
+
+
+/* =========================================================
+   ACCESS GRANTED
+========================================================= */
+
+.granted {
+
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 30;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    background: #000;
+
+    opacity: 0;
+
+    visibility: hidden;
+
+}
+
+
+.granted.active {
+
+    opacity: 1;
+
+    visibility: visible;
+
+}
+
+
+.granted-symbol {
+
+    font-size: 120px;
+
+    color: #00ffae;
+
+    text-shadow:
+
+        0 0 25px #00ffae,
+
+        0 0 70px rgba(0,255,174,.6);
+
+}
+
+
+.granted-title {
+
+    margin-top: 20px;
+
+    font-size:
+        clamp(45px, 7vw, 100px);
+
+    font-weight: 900;
+
+    letter-spacing: 8px;
+
+    color: #00ffae;
+
+}
+
+
+/* =========================================================
+   BANNER
+========================================================= */
+
+.banner {
+
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 50;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    background:
+
+        radial-gradient(
+            circle at center,
+            rgba(0,170,230,.2),
+            transparent 42%
+        ),
+
+        #000;
+
+    opacity: 0;
+
+    visibility: hidden;
+
+}
+
+
+.banner.active {
+
+    opacity: 1;
+
+    visibility: visible;
+
+}
+
+
+.banner-content {
+
+    animation:
+        bannerReveal
+        1.5s
+        cubic-bezier(.2,.8,.2,1);
+
+}
+
+
+@keyframes bannerReveal {
+
+    0% {
+
+        opacity: 0;
+
+        transform:
+            scale(.5)
+            translateY(80px);
+
+        filter:
+            blur(15px);
+
+    }
+
+    60% {
+
+        opacity: 1;
+
+        filter:
+            blur(0);
+
+    }
+
+    100% {
+
+        transform:
+            scale(1)
+            translateY(0);
+
+    }
+
+}
+
+
+.banner-line {
+
+    width: 300px;
+
+    height: 2px;
+
+    margin:
+        25px auto;
+
+    background:
+
+        linear-gradient(
+            90deg,
+            transparent,
+            #00d9ff,
+            white,
+            #00d9ff,
+            transparent
+        );
+
+    box-shadow:
+        0 0 20px #00d9ff;
+
+}
+
+
+.banner-small {
+
+    font-size:
+        clamp(18px, 2vw, 30px);
+
+    letter-spacing:
+        8px;
+
+    font-weight: 600;
+
+}
+
+
+.banner-main {
+
+    margin-top: 20px;
+
+    font-size:
+        clamp(55px, 9vw, 145px);
+
+    font-weight: 900;
+
+    letter-spacing: 4px;
+
+    text-shadow:
+
+        0 0 20px
+        rgba(0,210,255,.8),
+
+        0 0 70px
+        rgba(0,150,255,.35);
+
+}
+
+
+.banner-year {
+
+    margin-top: 10px;
+
+    font-size:
+        clamp(35px, 5vw, 70px);
+
+    color: #00d9ff;
+
+    font-weight: 800;
+
+    letter-spacing: 15px;
+
+}
+
+
+/* =========================================================
+   ACTUAL BANNER IMAGE
+========================================================= */
+
+.banner-image {
+    display: block;
+    width: min(92vw, 1500px);
+    max-height: 88vh;
+    object-fit: contain;
+    border: 0;
+    filter:
+        drop-shadow(0 0 18px rgba(0,210,255,.35))
+        drop-shadow(0 0 55px rgba(0,150,255,.18));
+}
+
+@media (max-width: 800px) {
+    .banner-image {
+        width: 94vw;
+        max-height: 82vh;
+    }
+}
+
+
+/* =========================================================
+   PARTICLES
+========================================================= */
+
+.particle {
+
+    position: fixed;
+
+    width: 3px;
+
+    height: 3px;
+
+    border-radius: 50%;
+
+    background: #00d9ff;
+
+    opacity: .4;
+
+    animation:
+        float 5s linear infinite;
+
+}
+
+
+@keyframes float {
+
+    from {
+
+        transform:
+            translateY(100vh);
+
+    }
+
+    to {
+
+        transform:
+            translateY(-20px);
+
+    }
+
+}
+
+
+/* =========================================================
+   ACTIVATE AUDIO
+========================================================= */
+
+.audio-start {
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 200;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: #000;
+
+}
+
+
+.audio-start.hide {
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    transition: .5s;
+
+}
+
+
+.audio-box {
+
+    text-align: center;
+
+}
+
+
+.audio-box h1 {
+
+    font-size: 40px;
+
+    letter-spacing: 5px;
+
+}
+
+
+.audio-box p {
+
+    opacity: .5;
+
+    letter-spacing: 2px;
+
+}
+
+
+#activateAudio {
+
+    margin-top: 25px;
+
+    padding:
+        15px 35px;
+
+    border:
+        1px solid #00d9ff;
+
+    background:
+        rgba(0,210,255,.08);
+
+    color: white;
+
+    font-weight: bold;
+
+    letter-spacing: 3px;
+
+    cursor: pointer;
+
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.connection {
+
+    position: fixed;
+
+    right: 30px;
+
+    top: 35px;
+
+    z-index: 100;
+
+    font-size: 10px;
+
+    letter-spacing: 2px;
+
+    opacity: .6;
+
+}
+
+
+.connection::before {
+
+    content: "";
+
+    display: inline-block;
+
+    width: 7px;
+
+    height: 7px;
+
+    margin-right: 8px;
+
+    border-radius: 50%;
+
+    background: #00ffae;
+
+    box-shadow:
+        0 0 10px #00ffae;
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="background"></div>
+
+<div class="grid"></div>
+
+
+<div class="top">
+
+    PERASMIAN PROGRAM<br>
+
+    SAFE SK ABANG GESA 2026
+
+</div>
+
+
+<div
+    class="connection"
+    id="connection">
+
+    SYSTEM READY
+
+</div>
+
+
+<!-- =====================================================
+     LOCKED
+===================================================== -->
+
+<section
+    class="lock-screen"
+    id="lockScreen">
+
+    <div>
+
+        <div class="lock-icon">
+            🔒
+        </div>
+
+        <div class="lock-title">
+            AKSES DITUTUP
+        </div>
+
+        <div class="lock-subtitle">
+            SYSTEM STANDBY
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     AUTHENTICATING
+===================================================== -->
+
+<section
+    class="auth"
+    id="authScreen">
+
+    <div class="auth-ring"></div>
+
+    <div class="auth-inner">
+
+        <div class="auth-title">
+            AUTHENTICATING
+        </div>
+
+        <div class="auth-small">
+            GESTURE SIGNAL RECEIVED
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     GRANTED
+===================================================== -->
+
+<section
+    class="granted"
+    id="grantedScreen">
+
+    <div>
+
+        <div class="granted-symbol">
+            ✓
+        </div>
+
+        <div class="granted-title">
+            ACCESS GRANTED
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     BANNER
+===================================================== -->
+
+<section
+    class="banner"
+    id="banner">
+
+    <div class="banner-content">
+        <img
+            id="bannerImage"
+            class="banner-image"
+            src="banner.png"
+            alt="SAFE SK Abang Gesa 2026"
+        >
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     AUDIO START
+===================================================== -->
+
+<section
+    class="audio-start"
+    id="audioStart">
+
+    <div class="audio-box">
+
+        <h1>
+            SAFE 2026
+        </h1>
+
+        <p>
+            CEREMONY DISPLAY SYSTEM
+        </p>
+
+        <button id="activateAudio">
+
+            ACTIVATE DISPLAY
+
+        </button>
+
+    </div>
+
+</section>
+
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
+<script>
+
+/* =========================================================
+   FIREBASE CONFIGURATION
+========================================================= */
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDNlFEnA9ZGLFTFCuwMK5ZMzv3D8Ww2BAo",
+  authDomain: "smppro-2845e.firebaseapp.com",
+  databaseURL: "https://smppro-2845e-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "smppro-2845e",
+  storageBucket: "smppro-2845e.firebasestorage.app",
+  messagingSenderId: "488762363336",
+  appId: "1:488762363336:web:da4ccbb41c1236eaf184fd",
+  measurementId: "G-NZR5BXZKR1"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+const accessRef = db.ref("safe/access");
+
+
+/* =========================================================
+   ELEMENTS
+========================================================= */
+
+const lockScreen =
+    document.getElementById(
+        "lockScreen"
+    );
+
+const authScreen =
+    document.getElementById(
+        "authScreen"
+    );
+
+const grantedScreen =
+    document.getElementById(
+        "grantedScreen"
+    );
+
+const banner =
+    document.getElementById(
+        "banner"
+    );
+
+const audioStart =
+    document.getElementById(
+        "audioStart"
+    );
+
+const connection =
+    document.getElementById(
+        "connection"
+    );
+
+
+/* =========================================================
+   AUDIO
+========================================================= */
+
+let audioContext = null;
+
+
+function initAudio() {
+
+    audioContext =
+        new (
+            window.AudioContext ||
+            window.webkitAudioContext
+        )();
+
+}
+
+
+function tone(
+    frequency,
+    duration = .2,
+    type = "sine",
+    volume = .08
+) {
+
+    if (!audioContext)
+        return;
+
+
+    const oscillator =
+        audioContext.createOscillator();
+
+    const gain =
+        audioContext.createGain();
+
+
+    oscillator.type =
+        type;
+
+    oscillator.frequency.value =
+        frequency;
+
+
+    gain.gain.setValueAtTime(
+        volume,
+        audioContext.currentTime
+    );
+
+
+    gain.gain.exponentialRampToValueAtTime(
+        .001,
+        audioContext.currentTime +
+        duration
+    );
+
+
+    oscillator.connect(gain);
+
+    gain.connect(
+        audioContext.destination
+    );
+
+
+    oscillator.start();
+
+    oscillator.stop(
+        audioContext.currentTime +
+        duration
+    );
+
+}
+
+
+/* =========================================================
+   SOUND SEQUENCES
+========================================================= */
+
+function lockSound() {
+
+    tone(
+        180,
+        .15,
+        "square",
+        .08
+    );
+
+    setTimeout(() => {
+
+        tone(
+            120,
+            .3,
+            "sine",
+            .05
+        );
+
+    }, 150);
+
+}
+
+
+function authenticateSound() {
+
+    tone(
+        500,
+        .08,
+        "square",
+        .04
+    );
+
+    setTimeout(() => {
+
+        tone(
+            700,
+            .08,
+            "square",
+            .05
+        );
+
+    }, 120);
+
+}
+
+
+function grantedSound() {
+
+    tone(
+        550,
+        .12,
+        "sine",
+        .08
+    );
+
+    setTimeout(() => {
+
+        tone(
+            800,
+            .12,
+            "sine",
+            .09
+        );
+
+    }, 130);
+
+    setTimeout(() => {
+
+        tone(
+            1200,
+            .4,
+            "sine",
+            .1
+        );
+
+    }, 260);
+
+}
+
+
+/* =========================================================
+   ACTIVATE DISPLAY
+========================================================= */
+
+document
+    .getElementById(
+        "activateAudio"
+    )
+    .addEventListener(
+        "click",
+        () => {
+
+            initAudio();
+
+            lockSound();
+
+            audioStart.classList.add(
+                "hide"
+            );
+
+        }
+    );
+
+
+/* =========================================================
+   FIREBASE ACCESS SIGNAL
+   index.html menulis event ke safe/access.
+   display.html mendengar perubahan secara realtime.
+========================================================= */
+
+let lastEventId = null;
+let ceremonyRunning = false;
+
+// Hanya terima event yang benar-benar berlaku selepas display dibuka.
+// Ini mengelakkan banner lama daripada dimainkan semula ketika display
+// baru sahaja dimuatkan.
+const displayStartedAt = Date.now();
+
+function receiveAccessSignal(data = {}) {
+
+    if (ceremonyRunning) return;
+
+    const eventId = data.eventId || String(Date.now());
+
+    // Elak event Firebase yang sama dimainkan berulang kali
+    if (eventId === lastEventId) return;
+    lastEventId = eventId;
+    ceremonyRunning = true;
+
+    connection.innerText = "ACCESS SIGNAL RECEIVED";
+
+    /* AUTHENTICATING */
+    authScreen.classList.add("active");
+    authenticateSound();
+
+    setTimeout(() => {
+
+        authScreen.classList.remove("active");
+        grantedScreen.classList.add("active");
+        grantedSound();
+
+    }, 2200);
+
+    /* REVEAL ACTUAL BANNER IMAGE */
+    setTimeout(() => {
+
+        grantedScreen.classList.remove("active");
+        lockScreen.classList.add("hide");
+        banner.classList.add("active");
+
+        connection.innerText = "CEREMONY DISPLAY ACTIVE";
+
+    }, 4300);
+}
+
+
+/* Listen to Firebase Realtime Database */
+accessRef.on("value", snapshot => {
+
+    const data = snapshot.val();
+
+    if (!data) return;
+
+    const eventTime = Number(data.timestamp || 0);
+
+    if (
+        data.status === "opened" &&
+        data.eventId &&
+        eventTime >= (displayStartedAt - 15000)
+    ) {
+        receiveAccessSignal(data);
+    }
+
+}, error => {
+
+    console.error("Firebase listener error:", error);
+    connection.innerText = "FIREBASE ERROR";
+
+});
+
+
+/* =========================================================
+   PARTICLES
+========================================================= */
+
+for (
+    let i = 0;
+    i < 50;
+    i++
+) {
+
+    const particle =
+        document.createElement(
+            "div"
+        );
+
+    particle.className =
+        "particle";
+
+    particle.style.left =
+        Math.random() * 100 + "%";
+
+    particle.style.animationDelay =
+        Math.random() * 5 + "s";
+
+    particle.style.animationDuration =
+        3 + Math.random() * 7 + "s";
+
+    document.body.appendChild(
+        particle
+    );
+
+}
+
+
+/* =========================================================
+   INITIAL STATE
+========================================================= */
+
+lockScreen.classList.remove(
+    "hide"
+);
+
+authScreen.classList.remove(
+    "active"
+);
+
+grantedScreen.classList.remove(
+    "active"
+);
+
+banner.classList.remove(
+    "active"
+);
+
+</script>
+
+</body>
+</html>
