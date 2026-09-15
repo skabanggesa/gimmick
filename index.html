@@ -296,7 +296,163 @@ main {
 .status-box.hand-box{color:#ffca5c}.status-box.hand-box span{color:#ffca5c;text-shadow:0 0 8px rgba(255,202,92,.4)}
 .status-box.gesture-box{color:#00d9ff}
 .status-box.access-box{color:#ff5c68}.status-box.access-box span{color:#ff5c68;text-shadow:0 0 8px rgba(255,92,104,.45)}
-@media(max-width:800px){.left-status-panel{left:10px;top:auto;bottom:18px;transform:none;width:155px;gap:6px}.status-box{min-height:54px;padding:8px 10px 8px 12px;font-size:7px;letter-spacing:1.2px}.status-box span{margin-top:4px;font-size:10px}}
+@media (max-width: 800px) {
+    header {
+        height: 72px;
+        padding: 0 14px;
+    }
+
+    .brand {
+        font-size: 9px;
+        letter-spacing: 1.5px;
+    }
+
+    .title {
+        position: static;
+        transform: none;
+        margin: 0 auto;
+        max-width: 58vw;
+        font-size: clamp(12px, 4vw, 20px);
+        line-height: 1.15;
+        letter-spacing: .5px;
+    }
+
+    .system {
+        font-size: 7px;
+        letter-spacing: 1px;
+        white-space: nowrap;
+    }
+
+    .system::before {
+        width: 6px;
+        height: 6px;
+        margin-right: 4px;
+    }
+
+    main {
+        inset: 72px 0 0;
+        padding: 12px;
+    }
+
+    .scanner {
+        width: min(82vw, 380px);
+        height: min(58vh, 500px);
+        max-height: calc(100vh - 230px);
+    }
+
+    .radar {
+        width: min(48vw, 220px);
+        height: min(48vw, 220px);
+    }
+
+    .center-status {
+        top: 50%;
+        padding: 0 18px;
+    }
+
+    .status-title {
+        font-size: clamp(15px, 4.5vw, 23px);
+        letter-spacing: 2px;
+    }
+
+    .status-subtitle {
+        margin-top: 7px;
+        font-size: 8px;
+        line-height: 1.5;
+        letter-spacing: 1px;
+    }
+
+    .left-status-panel {
+        left: 10px;
+        right: 10px;
+        top: auto;
+        bottom: 10px;
+        transform: none;
+        width: auto;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 6px;
+    }
+
+    .status-box {
+        min-height: 48px;
+        padding: 7px 8px 7px 10px;
+        font-size: 6px;
+        letter-spacing: 1px;
+    }
+
+    .status-box span {
+        margin-top: 3px;
+        font-size: 9px;
+        letter-spacing: 1px;
+    }
+
+    .sound-button {
+        right: 10px;
+        bottom: 132px;
+        padding: 8px 10px;
+        font-size: 8px;
+    }
+}
+
+@media (max-width: 420px) {
+    header {
+        height: 64px;
+    }
+
+    .brand {
+        display: none;
+    }
+
+    .title {
+        max-width: 72vw;
+        font-size: 13px;
+    }
+
+    .system {
+        font-size: 6px;
+    }
+
+    main {
+        inset: 64px 0 0;
+    }
+
+    .scanner {
+        width: 88vw;
+        height: min(52vh, 390px);
+        max-height: calc(100vh - 220px);
+    }
+
+    .status-subtitle {
+        max-width: 230px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .left-status-panel {
+        bottom: 8px;
+        gap: 5px;
+    }
+
+    .status-box {
+        min-height: 44px;
+        padding: 6px 7px 6px 8px;
+    }
+
+    .status-label {
+        gap: 5px;
+    }
+
+    .status-dot {
+        width: 5px;
+        height: 5px;
+    }
+
+    .sound-button {
+        bottom: 112px;
+        right: 8px;
+    }
+}
 
 /* ACCESS */
 
@@ -435,7 +591,7 @@ main {
 <header>
 
     <div class="brand">
-        SAFE / GESTURE CONTROL
+        SAFE / 2026
     </div>
 
     <div class="title">
@@ -456,58 +612,16 @@ main {
 
         <div class="radar"></div>
 
-        <svg
-            class="hand-svg"
-            viewBox="0 0 500 650"
-            preserveAspectRatio="none">
-
-            <path
-                class="hand-shape"
-                d="
-                M250 625
-                C205 625 165 605 145 575
-                C125 545 120 505 125 465
-                L105 280
-                C102 250 115 230 138 228
-                C158 226 172 242 175 265
-                L180 350
-                L165 130
-                C163 98 180 78 205 78
-                C230 78 245 95 247 125
-                L255 320
-                L260 65
-                C260 30 280 10 305 10
-                C330 10 347 30 347 65
-                L345 320
-                L360 115
-                C362 82 380 63 405 66
-                C430 69 444 90 440 123
-                L422 350
-                L450 185
-                C455 155 475 143 493 150
-                C515 158 522 180 516 210
-                L480 420
-                C472 480 465 525 435 565
-                C405 605 360 625 310 628
-                Z
-                " />
-
-        </svg>
-
         <div class="scan-line"></div>
 
 
         <div class="center-status">
 
-            <div class="icon" id="icon">
-                🖐
-            </div>
-
             <div
                 class="status-title"
                 id="statusTitle">
 
-                HAND SCANNER
+                GESTURE READY
 
             </div>
 
@@ -515,7 +629,7 @@ main {
                 class="status-subtitle"
                 id="statusSubtitle">
 
-                PLACE YOUR PALM INSIDE THE SCANNER
+                PLACE YOUR PALM INSIDE THE SCAN AREA
 
             </div>
 
@@ -531,23 +645,6 @@ main {
     <div class="status-box hand-box"><div class="status-label"><span class="status-dot"></span>HAND STATUS</div><span id="handStatus">NOT DETECTED</span></div>
     <div class="status-box gesture-box"><div class="status-label"><span class="status-dot"></span>GESTURE</div><span id="gestureStatus">STANDBY</span></div>
     <div class="status-box access-box"><div class="status-label"><span class="status-dot"></span>ACCESS</div><span id="accessStatus">LOCKED</span></div>
-</div>
-
-    <div class="status-box">
-        HAND
-        <span id="handStatus">NOT DETECTED</span>
-    </div>
-
-    <div class="status-box">
-        GESTURE
-        <span id="gestureStatus">STANDBY</span>
-    </div>
-
-    <div class="status-box">
-        ACCESS
-        <span id="accessStatus">LOCKED</span>
-    </div>
-
 </div>
 
 
@@ -974,10 +1071,10 @@ function onResults(results) {
             "STANDBY";
 
         statusTitle.innerText =
-            "HAND SCANNER";
+            "GESTURE READY";
 
         statusSubtitle.innerText =
-            "PLACE YOUR PALM INSIDE THE SCANNER";
+            "PLACE YOUR PALM INSIDE THE SCAN AREA";
 
         palmStart = 0;
 
