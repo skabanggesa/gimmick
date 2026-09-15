@@ -1,25 +1,33 @@
 <!DOCTYPE html>
-<html lang="ms">
+<html lang="en">
+
 <head>
 
 <meta charset="UTF-8">
 
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
-<title>SAFE 2026 — Ceremony Display</title>
+<title>SAGE 2026 — Main Display</title>
+
 
 <style>
+
+/* =========================================================
+   RESET
+========================================================= */
 
 * {
     box-sizing: border-box;
 }
 
+
 html,
 body {
 
     margin: 0;
-    padding: 0;
 
     width: 100%;
     height: 100%;
@@ -39,10 +47,12 @@ body {
 
 
 /* =========================================================
-   MAIN
+   MAIN DISPLAY
 ========================================================= */
 
 body {
+
+    position: relative;
 
     display: flex;
 
@@ -50,35 +60,12 @@ body {
 
     justify-content: center;
 
-    position: relative;
-
 }
 
 
 /* =========================================================
-   BACKGROUND
+   DIGITAL GRID
 ========================================================= */
-
-.background {
-
-    position: fixed;
-
-    inset: 0;
-
-    background:
-
-        radial-gradient(
-            circle at center,
-            rgba(0,120,190,.16),
-            transparent 45%
-        ),
-
-        #000;
-
-}
-
-
-/* GRID */
 
 .grid {
 
@@ -86,50 +73,99 @@ body {
 
     inset: 0;
 
-    opacity: .12;
+    pointer-events: none;
+
+    opacity: .13;
 
     background-image:
 
         linear-gradient(
-            rgba(0,210,255,.3) 1px,
+            rgba(0,210,255,.22) 1px,
             transparent 1px
         ),
 
         linear-gradient(
             90deg,
-            rgba(0,210,255,.3) 1px,
+            rgba(0,210,255,.22) 1px,
             transparent 1px
         );
 
-    background-size: 70px 70px;
+    background-size:
+        60px 60px;
+
+    z-index: 2;
 
 }
 
 
 /* =========================================================
-   TOP LABEL
+   AMBIENT LIGHT
 ========================================================= */
 
-.top {
+.ambient {
 
     position: fixed;
 
-    top: 35px;
+    inset: 0;
+
+    pointer-events: none;
+
+    background:
+
+        radial-gradient(
+            circle at center,
+            rgba(0,140,255,.08),
+            transparent 38%
+        ),
+
+        radial-gradient(
+            circle at center,
+            rgba(0,255,200,.035),
+            transparent 65%
+        );
+
+    z-index: 1;
+
+}
+
+
+/* =========================================================
+   CONNECTION STATUS
+========================================================= */
+
+.connection {
+
+    position: fixed;
+
+    top: 28px;
 
     left: 50%;
 
     transform:
         translateX(-50%);
 
+    z-index: 50;
+
+    padding:
+        8px 18px;
+
+    border:
+        1px solid
+        rgba(0,210,255,.25);
+
+    background:
+        rgba(0,0,0,.55);
+
+    color:
+        rgba(255,255,255,.5);
+
+    font-size: 10px;
+
+    letter-spacing: 3px;
+
     text-align: center;
 
-    z-index: 10;
-
-    letter-spacing: 4px;
-
-    font-size: 13px;
-
-    color: #00d9ff;
+    white-space: nowrap;
 
 }
 
@@ -138,13 +174,13 @@ body {
    LOCK SCREEN
 ========================================================= */
 
-.lock-screen {
+.lock {
 
-    position: absolute;
+    position: fixed;
 
     inset: 0;
 
-    z-index: 5;
+    z-index: 10;
 
     display: flex;
 
@@ -154,39 +190,123 @@ body {
 
     text-align: center;
 
+    background:
+        #000;
+
+    opacity: 1;
+
+    visibility: visible;
+
     transition:
         opacity .8s ease,
-        transform .8s ease;
+        visibility .8s ease;
 
 }
 
 
-.lock-screen.hide {
+.lock.hide {
 
     opacity: 0;
 
-    transform:
-        scale(1.2);
-
-    pointer-events: none;
+    visibility: hidden;
 
 }
 
 
+.lock-content {
+
+    position: relative;
+
+    width: min(
+        700px,
+        90vw
+    );
+
+}
+
+
+/* =========================================================
+   LOCK ICON
+========================================================= */
+
 .lock-icon {
 
-    font-size: 110px;
+    position: relative;
 
-    margin-bottom: 25px;
+    width: 130px;
+    height: 130px;
 
-    filter:
-        drop-shadow(
-            0 0 25px
-            rgba(0,210,255,.8)
-        );
+    margin:
+        0 auto 30px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border:
+        1px solid
+        rgba(0,210,255,.3);
+
+    border-radius: 50%;
+
+    color: #00d9ff;
+
+    font-size: 58px;
+
+    box-shadow:
+
+        0 0 20px
+        rgba(0,210,255,.12),
+
+        inset 0 0 25px
+        rgba(0,210,255,.04);
 
     animation:
-        lockPulse 2s infinite;
+        lockPulse 3s ease-in-out infinite;
+
+}
+
+
+.lock-icon::before {
+
+    content: "";
+
+    position: absolute;
+
+    inset: -18px;
+
+    border:
+        1px solid
+        rgba(0,210,255,.15);
+
+    border-radius: 50%;
+
+    animation:
+        rotateRing
+        8s linear infinite;
+
+}
+
+
+.lock-icon::after {
+
+    content: "";
+
+    position: absolute;
+
+    inset: -35px;
+
+    border:
+        1px dashed
+        rgba(0,210,255,.08);
+
+    border-radius: 50%;
+
+    animation:
+        rotateRingReverse
+        14s linear infinite;
 
 }
 
@@ -197,16 +317,16 @@ body {
     100% {
 
         transform:
-            scale(1);
+            scale(.95);
 
-        opacity: .7;
+        opacity: .55;
 
     }
 
     50% {
 
         transform:
-            scale(1.08);
+            scale(1.05);
 
         opacity: 1;
 
@@ -215,38 +335,118 @@ body {
 }
 
 
+@keyframes rotateRing {
+
+    from {
+        transform:
+            rotate(0deg);
+    }
+
+    to {
+        transform:
+            rotate(360deg);
+    }
+
+}
+
+
+@keyframes rotateRingReverse {
+
+    from {
+        transform:
+            rotate(360deg);
+    }
+
+    to {
+        transform:
+            rotate(0deg);
+    }
+
+}
+
+
+/* =========================================================
+   LOCK TITLE
+========================================================= */
+
 .lock-title {
 
     font-size:
-        clamp(45px, 7vw, 100px);
+        clamp(
+            38px,
+            6vw,
+            76px
+        );
 
     font-weight: 900;
 
-    letter-spacing: 8px;
+    letter-spacing: 7px;
+
+    color: #fff;
+
+    text-shadow:
+
+        0 0 12px
+        rgba(255,255,255,.5),
+
+        0 0 35px
+        rgba(0,210,255,.45);
 
 }
 
 
 .lock-subtitle {
 
-    margin-top: 20px;
+    margin-top: 18px;
 
-    font-size: 15px;
+    font-size:
+        clamp(
+            11px,
+            1.3vw,
+            15px
+        );
 
     letter-spacing: 5px;
 
-    opacity: .45;
+    color:
+        rgba(255,255,255,.45);
+
+}
+
+
+.lock-line {
+
+    width: 300px;
+
+    max-width: 70vw;
+
+    height: 1px;
+
+    margin:
+        28px auto;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            #00d9ff,
+            transparent
+        );
+
+    box-shadow:
+        0 0 12px
+        #00d9ff;
 
 }
 
 
 /* =========================================================
-   AUTHENTICATING
+   AUTHENTICATING SCREEN
 ========================================================= */
 
 .auth {
 
-    position: absolute;
+    position: fixed;
 
     inset: 0;
 
@@ -260,13 +460,16 @@ body {
 
     text-align: center;
 
-    background: #000;
+    background:
+        rgba(0,0,0,.96);
 
     opacity: 0;
 
     visibility: hidden;
 
-    transition: .4s;
+    transition:
+        opacity .45s ease,
+        visibility .45s ease;
 
 }
 
@@ -280,29 +483,132 @@ body {
 }
 
 
-.auth-ring {
+.auth-inner {
 
-    width: 240px;
-
-    height: 240px;
-
-    border-radius: 50%;
-
-    border:
-
-        2px solid
-        rgba(0,210,255,.25);
-
-    border-top-color:
-        #00d9ff;
-
-    animation:
-        rotate 1s linear infinite;
+    width: min(
+        900px,
+        92vw
+    );
 
 }
 
 
-@keyframes rotate {
+/* =========================================================
+   AUTH RINGS
+========================================================= */
+
+.auth-ring {
+
+    position: relative;
+
+    width:
+        clamp(
+            190px,
+            25vw,
+            300px
+        );
+
+    height:
+        clamp(
+            190px,
+            25vw,
+            300px
+        );
+
+    margin:
+        0 auto 45px;
+
+    border:
+        2px solid
+        rgba(0,217,255,.35);
+
+    border-radius: 50%;
+
+    box-shadow:
+
+        0 0 25px
+        rgba(0,217,255,.12),
+
+        inset 0 0 30px
+        rgba(0,217,255,.05);
+
+    animation:
+        authRotate
+        5s linear infinite;
+
+}
+
+
+.auth-ring::before {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 22px;
+
+    border:
+        1px solid
+        rgba(0,217,255,.65);
+
+    border-radius: 50%;
+
+}
+
+
+.auth-ring::after {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 55px;
+
+    border:
+        1px dashed
+        rgba(0,217,255,.5);
+
+    border-radius: 50%;
+
+}
+
+
+.auth-core {
+
+    position: absolute;
+
+    left: 50%;
+    top: 50%;
+
+    transform:
+        translate(-50%, -50%);
+
+    font-size: 65px;
+
+    color: #00d9ff;
+
+    text-shadow:
+
+        0 0 15px #00d9ff,
+
+        0 0 40px
+        rgba(0,217,255,.7);
+
+    animation:
+        corePulse 1.4s
+        ease-in-out infinite;
+
+}
+
+
+@keyframes authRotate {
+
+    from {
+
+        transform:
+            rotate(0deg);
+
+    }
 
     to {
 
@@ -314,44 +620,169 @@ body {
 }
 
 
-.auth-inner {
+@keyframes corePulse {
 
-    position: absolute;
+    0%,
+    100% {
+
+        transform:
+            translate(-50%, -50%)
+            scale(.85);
+
+        opacity: .5;
+
+    }
+
+    50% {
+
+        transform:
+            translate(-50%, -50%)
+            scale(1.1);
+
+        opacity: 1;
+
+    }
 
 }
 
 
+/* =========================================================
+   AUTH TEXT
+========================================================= */
+
 .auth-title {
 
-    font-size: 28px;
+    font-size:
+        clamp(
+            38px,
+            6vw,
+            72px
+        );
 
-    font-weight: 800;
+    font-weight: 900;
 
-    letter-spacing: 4px;
+    letter-spacing: 8px;
+
+    color: #00d9ff;
+
+    text-shadow:
+
+        0 0 15px #00d9ff,
+
+        0 0 45px
+        rgba(0,217,255,.45);
+
+    animation:
+        textPulse 1.8s
+        ease-in-out infinite;
 
 }
 
 
 .auth-small {
 
-    margin-top: 10px;
+    margin-top: 20px;
 
-    font-size: 12px;
+    font-size:
+        clamp(
+            10px,
+            1.5vw,
+            16px
+        );
+
+    letter-spacing: 4px;
+
+    color:
+        rgba(255,255,255,.65);
+
+    line-height: 1.7;
+
+}
+
+
+.auth-signal {
+
+    margin-top: 28px;
+
+    font-size: 10px;
 
     letter-spacing: 3px;
 
-    opacity: .5;
+    color:
+        rgba(0,217,255,.65);
+
+}
+
+
+.auth-signal::before {
+
+    content: "";
+
+    display: inline-block;
+
+    width: 7px;
+    height: 7px;
+
+    margin-right: 8px;
+
+    border-radius: 50%;
+
+    background: #00d9ff;
+
+    box-shadow:
+        0 0 12px
+        #00d9ff;
+
+    animation:
+        signalBlink .8s
+        infinite;
+
+}
+
+
+@keyframes textPulse {
+
+    0%,
+    100% {
+
+        opacity: .55;
+
+    }
+
+    50% {
+
+        opacity: 1;
+
+    }
+
+}
+
+
+@keyframes signalBlink {
+
+    0%,
+    100% {
+
+        opacity: .2;
+
+    }
+
+    50% {
+
+        opacity: 1;
+
+    }
 
 }
 
 
 /* =========================================================
-   ACCESS GRANTED
+   GRANTED SCREEN
 ========================================================= */
 
 .granted {
 
-    position: absolute;
+    position: fixed;
 
     inset: 0;
 
@@ -383,33 +814,138 @@ body {
 }
 
 
+.granted-content {
+
+    animation:
+        grantedIn
+        .8s ease;
+
+}
+
+
+@keyframes grantedIn {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            scale(.65);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            scale(1);
+
+    }
+
+}
+
+
 .granted-symbol {
 
-    font-size: 120px;
+    width: 150px;
+    height: 150px;
+
+    margin:
+        0 auto 35px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border:
+        2px solid
+        #00ffae;
+
+    border-radius: 50%;
+
+    font-size: 90px;
 
     color: #00ffae;
 
     text-shadow:
+        0 0 20px #00ffae,
+        0 0 60px
+        rgba(0,255,174,.7);
 
-        0 0 25px #00ffae,
+    box-shadow:
 
-        0 0 70px rgba(0,255,174,.6);
+        0 0 25px
+        rgba(0,255,174,.3),
+
+        inset 0 0 30px
+        rgba(0,255,174,.08);
+
+    animation:
+        grantedPulse
+        1.3s ease-in-out infinite;
+
+}
+
+
+@keyframes grantedPulse {
+
+    0%,
+    100% {
+
+        transform:
+            scale(.92);
+
+    }
+
+    50% {
+
+        transform:
+            scale(1.05);
+
+    }
 
 }
 
 
 .granted-title {
 
-    margin-top: 20px;
-
     font-size:
-        clamp(45px, 7vw, 100px);
+        clamp(
+            45px,
+            8vw,
+            100px
+        );
 
     font-weight: 900;
 
     letter-spacing: 8px;
 
     color: #00ffae;
+
+    text-shadow:
+
+        0 0 15px
+        #00ffae,
+
+        0 0 45px
+        rgba(0,255,174,.55);
+
+}
+
+
+.granted-subtitle {
+
+    margin-top: 18px;
+
+    font-size: 12px;
+
+    letter-spacing: 5px;
+
+    color:
+        rgba(255,255,255,.55);
 
 }
 
@@ -420,33 +956,20 @@ body {
 
 .banner {
 
-    position: absolute;
+    position: fixed;
 
     inset: 0;
 
-    z-index: 50;
+    z-index: 40;
 
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    text-align: center;
-
-    background:
-
-        radial-gradient(
-            circle at center,
-            rgba(0,170,230,.2),
-            transparent 42%
-        ),
-
-        #000;
+    background: #000;
 
     opacity: 0;
 
     visibility: hidden;
+
+    transition:
+        opacity 1.2s ease;
 
 }
 
@@ -460,154 +983,181 @@ body {
 }
 
 
-.banner-content {
+.banner-video {
 
-    animation:
-        bannerReveal
-        1.5s
-        cubic-bezier(.2,.8,.2,1);
+    position: absolute;
 
-}
+    inset: 0;
 
+    width: 100%;
+    height: 100%;
 
-@keyframes bannerReveal {
+    object-fit: cover;
 
-    0% {
-
-        opacity: 0;
-
-        transform:
-            scale(.5)
-            translateY(80px);
-
-        filter:
-            blur(15px);
-
-    }
-
-    60% {
-
-        opacity: 1;
-
-        filter:
-            blur(0);
-
-    }
-
-    100% {
-
-        transform:
-            scale(1)
-            translateY(0);
-
-    }
-
-}
-
-
-.banner-line {
-
-    width: 300px;
-
-    height: 2px;
-
-    margin:
-        25px auto;
-
-    background:
-
-        linear-gradient(
-            90deg,
-            transparent,
-            #00d9ff,
-            white,
-            #00d9ff,
-            transparent
-        );
-
-    box-shadow:
-        0 0 20px #00d9ff;
-
-}
-
-
-.banner-small {
-
-    font-size:
-        clamp(18px, 2vw, 30px);
-
-    letter-spacing:
-        8px;
-
-    font-weight: 600;
-
-}
-
-
-.banner-main {
-
-    margin-top: 20px;
-
-    font-size:
-        clamp(55px, 9vw, 145px);
-
-    font-weight: 900;
-
-    letter-spacing: 4px;
-
-    text-shadow:
-
-        0 0 20px
-        rgba(0,210,255,.8),
-
-        0 0 70px
-        rgba(0,150,255,.35);
-
-}
-
-
-.banner-year {
-
-    margin-top: 10px;
-
-    font-size:
-        clamp(35px, 5vw, 70px);
-
-    color: #00d9ff;
-
-    font-weight: 800;
-
-    letter-spacing: 15px;
+    background: #000;
 
 }
 
 
 /* =========================================================
-   ACTUAL BANNER IMAGE
+   BANNER OVERLAY
 ========================================================= */
 
-.banner-image {
-    display: block;
-    width: min(92vw, 1500px);
-    max-height: 88vh;
-    object-fit: contain;
-    border: 0;
-    filter:
-        drop-shadow(0 0 18px rgba(0,210,255,.35))
-        drop-shadow(0 0 55px rgba(0,150,255,.18));
+.banner::after {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    background:
+
+        linear-gradient(
+            rgba(0,0,0,.08),
+            rgba(0,0,0,.12)
+        );
+
 }
 
-.banner-video {
-    object-fit: contain;
-    background: transparent;
-    outline: none;
+
+/* =========================================================
+   AUDIO ACTIVATION
+========================================================= */
+
+.audio-start {
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 100;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background:
+
+        radial-gradient(
+            circle at center,
+            rgba(0,80,120,.12),
+            #000 55%
+        );
+
 }
 
-@media (max-width: 800px) {
-    .banner-image {
-        width: 94vw;
-        max-height: 82vh;
-    }
+
+.audio-start.hide {
+
+    display: none;
+
+}
+
+
+.audio-box {
+
+    width:
+        min(
+            520px,
+            90vw
+        );
+
+    padding:
+        45px 35px;
+
+    text-align: center;
+
+    border:
+        1px solid
+        rgba(0,217,255,.3);
+
+    background:
+        rgba(0,10,16,.88);
+
+    box-shadow:
+
+        0 0 35px
+        rgba(0,217,255,.08),
+
+        inset 0 0 30px
+        rgba(0,217,255,.025);
+
+}
+
+
+.audio-box h1 {
+
+    margin: 0;
+
+    font-size:
+        clamp(
+            28px,
+            5vw,
+            52px
+        );
+
+    letter-spacing: 5px;
+
+    color: #00d9ff;
+
+}
+
+
+.audio-box p {
+
+    margin:
+        15px 0 30px;
+
+    font-size: 10px;
+
+    letter-spacing: 4px;
+
+    color:
+        rgba(255,255,255,.5);
+
+}
+
+
+.audio-box button {
+
+    padding:
+        14px 28px;
+
+    border:
+        1px solid
+        #00d9ff;
+
+    background:
+        rgba(0,217,255,.05);
+
+    color: white;
+
+    font-size: 11px;
+
+    letter-spacing: 3px;
+
+    cursor: pointer;
+
+    transition:
+        .25s ease;
+
+}
+
+
+.audio-box button:hover {
+
+    background:
+        rgba(0,217,255,.15);
+
+    box-shadow:
+        0 0 20px
+        rgba(0,217,255,.3);
+
 }
 
 
@@ -619,35 +1169,55 @@ body {
 
     position: fixed;
 
-    width: 3px;
+    bottom: -10px;
 
-    height: 3px;
+    width: 2px;
+    height: 2px;
 
     border-radius: 50%;
 
     background: #00d9ff;
 
-    opacity: .4;
+    opacity: .35;
+
+    z-index: 3;
 
     animation:
-        float 5s linear infinite;
+        particleMove
+        linear infinite;
 
 }
 
 
-@keyframes float {
+@keyframes particleMove {
 
     from {
 
         transform:
-            translateY(100vh);
+            translateY(0);
+
+        opacity: 0;
+
+    }
+
+    15% {
+
+        opacity: .4;
+
+    }
+
+    85% {
+
+        opacity: .4;
 
     }
 
     to {
 
         transform:
-            translateY(-20px);
+            translateY(-110vh);
+
+        opacity: 0;
 
     }
 
@@ -655,129 +1225,50 @@ body {
 
 
 /* =========================================================
-   ACTIVATE AUDIO
+   RESPONSIVE
 ========================================================= */
 
-.audio-start {
+@media (max-width: 700px) {
 
-    position: fixed;
+    .connection {
 
-    inset: 0;
+        top: 14px;
 
-    z-index: 200;
+        font-size: 7px;
 
-    display: flex;
+        letter-spacing: 2px;
 
-    align-items: center;
+    }
 
-    justify-content: center;
+    .lock-title {
 
-    background: #000;
+        letter-spacing: 4px;
 
-}
+    }
 
+    .lock-subtitle {
 
-.audio-start.hide {
+        letter-spacing: 3px;
 
-    opacity: 0;
+    }
 
-    visibility: hidden;
+    .auth-title {
 
-    transition: .5s;
+        letter-spacing: 4px;
 
-}
+    }
 
+    .auth-small {
 
-.audio-box {
+        letter-spacing: 2px;
 
-    text-align: center;
+    }
 
-}
+    .granted-title {
 
+        letter-spacing: 4px;
 
-.audio-box h1 {
-
-    font-size: 40px;
-
-    letter-spacing: 5px;
-
-}
-
-
-.audio-box p {
-
-    opacity: .5;
-
-    letter-spacing: 2px;
-
-}
-
-
-#activateAudio {
-
-    margin-top: 25px;
-
-    padding:
-        15px 35px;
-
-    border:
-        1px solid #00d9ff;
-
-    background:
-        rgba(0,210,255,.08);
-
-    color: white;
-
-    font-weight: bold;
-
-    letter-spacing: 3px;
-
-    cursor: pointer;
-
-}
-
-
-/* =========================================================
-   STATUS
-========================================================= */
-
-.connection {
-
-    position: fixed;
-
-    right: 30px;
-
-    top: 35px;
-
-    z-index: 100;
-
-    font-size: 10px;
-
-    letter-spacing: 2px;
-
-    opacity: .6;
-
-}
-
-
-.connection::before {
-
-    content: "";
-
-    display: inline-block;
-
-    width: 7px;
-
-    height: 7px;
-
-    margin-right: 8px;
-
-    border-radius: 50%;
-
-    background: #00ffae;
-
-    box-shadow:
-        0 0 10px #00ffae;
+    }
 
 }
 
@@ -789,49 +1280,67 @@ body {
 <body>
 
 
-<div class="background"></div>
+<!-- =======================================================
+     AMBIENT BACKGROUND
+======================================================= -->
+
+<div class="ambient"></div>
 
 <div class="grid"></div>
 
 
-<div class="top">
-
-    PERASMIAN PROGRAM<br>
-
-    SAFE SK ABANG GESA 2026
-
-</div>
-
+<!-- =======================================================
+     CONNECTION
+======================================================= -->
 
 <div
     class="connection"
     id="connection">
 
-    SYSTEM READY
+    SYSTEM STANDBY
 
 </div>
 
 
-<!-- =====================================================
-     LOCKED
-===================================================== -->
+<!-- =======================================================
+     LOCK SCREEN
+======================================================= -->
 
 <section
-    class="lock-screen"
+    class="lock"
     id="lockScreen">
 
-    <div>
+    <div class="lock-content">
+
 
         <div class="lock-icon">
+
             🔒
+
         </div>
+
 
         <div class="lock-title">
+
             AKSES DITUTUP
+
         </div>
 
+
+        <div class="lock-line"></div>
+
+
         <div class="lock-subtitle">
-            SYSTEM STANDBY
+
+            SAGE SK ABANG GESA 2026
+
+        </div>
+
+
+        <div class="lock-subtitle">
+
+            CEREMONY DISPLAY SYSTEM
+
         </div>
 
     </div>
@@ -839,24 +1348,48 @@ body {
 </section>
 
 
-<!-- =====================================================
+<!-- =======================================================
      AUTHENTICATING
-===================================================== -->
+======================================================= -->
 
 <section
     class="auth"
     id="authScreen">
 
-    <div class="auth-ring"></div>
-
     <div class="auth-inner">
 
-        <div class="auth-title">
-            AUTHENTICATING
+
+        <div class="auth-ring">
+
+            <div class="auth-core">
+
+                🖐
+
+            </div>
+
         </div>
 
-        <div class="auth-small">
+
+        <div class="auth-title">
+
+            AUTHENTICATING
+
+        </div>
+
+
+        <div
+            class="auth-small"
+            id="authSmall">
+
             GESTURE SIGNAL RECEIVED
+
+        </div>
+
+
+        <div class="auth-signal">
+
+            PALM BIOMETRIC SIGNAL PROCESSING
+
         </div>
 
     </div>
@@ -864,22 +1397,35 @@ body {
 </section>
 
 
-<!-- =====================================================
-     GRANTED
-===================================================== -->
+<!-- =======================================================
+     ACCESS GRANTED
+======================================================= -->
 
 <section
     class="granted"
     id="grantedScreen">
 
-    <div>
+    <div class="granted-content">
+
 
         <div class="granted-symbol">
+
             ✓
+
         </div>
 
+
         <div class="granted-title">
+
             ACCESS GRANTED
+
+        </div>
+
+
+        <div class="granted-subtitle">
+
+            AUTHENTICATION SUCCESSFUL
+
         </div>
 
     </div>
@@ -887,31 +1433,29 @@ body {
 </section>
 
 
-<!-- =====================================================
-     BANNER
-===================================================== -->
+<!-- =======================================================
+     BANNER VIDEO
+======================================================= -->
 
 <section
     class="banner"
     id="banner">
 
-    <div class="banner-content">
-        <video
-            id="bannerVideo"
-            class="banner-image banner-video"
-            src="banner.mp4"
-                 playsinline
-            preload="auto"
-            aria-label="SAFE SK Abang Gesa 2026"
-        ></video>
-    </div>
+    <video
+        id="bannerVideo"
+        class="banner-video"
+        src="banner.mp4"
+        playsinline
+        preload="auto">
+
+    </video>
 
 </section>
 
 
-<!-- =====================================================
-     AUDIO START
-===================================================== -->
+<!-- =======================================================
+     AUDIO ACTIVATION
+======================================================= -->
 
 <section
     class="audio-start"
@@ -920,14 +1464,17 @@ body {
     <div class="audio-box">
 
         <h1>
-            SAFE 2026
+            SAGE 2026
         </h1>
+
 
         <p>
             CEREMONY DISPLAY SYSTEM
         </p>
 
-        <button id="activateAudio">
+
+        <button
+            id="activateAudio">
 
             ACTIVATE DISPLAY
 
@@ -938,8 +1485,14 @@ body {
 </section>
 
 
+<!-- =======================================================
+     FIREBASE
+======================================================= -->
+
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
 
 <script>
 
@@ -948,19 +1501,78 @@ body {
 ========================================================= */
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDNlFEnA9ZGLFTFCuwMK5ZMzv3D8Ww2BAo",
-  authDomain: "smppro-2845e.firebaseapp.com",
-  databaseURL: "https://smppro-2845e-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "smppro-2845e",
-  storageBucket: "smppro-2845e.firebasestorage.app",
-  messagingSenderId: "488762363336",
-  appId: "1:488762363336:web:da4ccbb41c1236eaf184fd",
-  measurementId: "G-NZR5BXZKR1"
+
+    apiKey:
+        "AIzaSyDNlFEnA9ZGLFTFCuwMK5ZMzv3D8Ww2BAo",
+
+    authDomain:
+        "smppro-2845e.firebaseapp.com",
+
+    databaseURL:
+        "https://smppro-2845e-default-rtdb.asia-southeast1.firebasedatabase.app",
+
+    projectId:
+        "smppro-2845e",
+
+    storageBucket:
+        "smppro-2845e.firebasestorage.app",
+
+    messagingSenderId:
+        "488762363336",
+
+    appId:
+        "1:488762363336:web:da4ccbb41c1236eaf184fd",
+
+    measurementId:
+        "G-NZR5BXZKR1"
+
 };
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-const accessRef = db.ref("safe/access");
+
+/* =========================================================
+   FIREBASE
+========================================================= */
+
+let db = null;
+
+let accessRef = null;
+
+let firebaseReady = false;
+
+
+try {
+
+    firebase.initializeApp(
+        firebaseConfig
+    );
+
+    db =
+        firebase.database();
+
+    /*
+       Path mesti sama dengan
+       index.html
+    */
+
+    accessRef =
+        db.ref("safe/access");
+
+    firebaseReady = true;
+
+    console.log(
+        "Firebase: ONLINE"
+    );
+
+}
+
+catch (error) {
+
+    console.error(
+        "Firebase initialization error:",
+        error
+    );
+
+}
 
 
 /* =========================================================
@@ -992,9 +1604,24 @@ const audioStart =
         "audioStart"
     );
 
+const activateAudio =
+    document.getElementById(
+        "activateAudio"
+    );
+
 const connection =
     document.getElementById(
         "connection"
+    );
+
+const authSmall =
+    document.getElementById(
+        "authSmall"
+    );
+
+const bannerVideo =
+    document.getElementById(
+        "bannerVideo"
     );
 
 
@@ -1004,17 +1631,41 @@ const connection =
 
 let audioContext = null;
 
+let approvedAudio = null;
+
+
+/* =========================================================
+   INITIALIZE AUDIO
+========================================================= */
 
 function initAudio() {
 
-    audioContext =
-        new (
-            window.AudioContext ||
-            window.webkitAudioContext
-        )();
+    if (!audioContext) {
+
+        audioContext =
+            new (
+                window.AudioContext ||
+                window.webkitAudioContext
+            )();
+
+    }
+
+
+    if (
+        audioContext.state ===
+        "suspended"
+    ) {
+
+        audioContext.resume();
+
+    }
 
 }
 
+
+/* =========================================================
+   SYNTHETIC TONE
+========================================================= */
 
 function tone(
     frequency,
@@ -1028,10 +1679,12 @@ function tone(
 
 
     const oscillator =
-        audioContext.createOscillator();
+        audioContext
+            .createOscillator();
 
     const gain =
-        audioContext.createGain();
+        audioContext
+            .createGain();
 
 
     oscillator.type =
@@ -1048,9 +1701,12 @@ function tone(
 
 
     gain.gain.exponentialRampToValueAtTime(
+
         .001,
+
         audioContext.currentTime +
         duration
+
     );
 
 
@@ -1064,15 +1720,17 @@ function tone(
     oscillator.start();
 
     oscillator.stop(
+
         audioContext.currentTime +
         duration
+
     );
 
 }
 
 
 /* =========================================================
-   SOUND SEQUENCES
+   LOCK SOUND
 ========================================================= */
 
 function lockSound() {
@@ -1084,19 +1742,27 @@ function lockSound() {
         .08
     );
 
-    setTimeout(() => {
 
-        tone(
-            120,
-            .3,
-            "sine",
-            .05
-        );
+    setTimeout(
+        () => {
 
-    }, 150);
+            tone(
+                120,
+                .3,
+                "sine",
+                .05
+            );
+
+        },
+        150
+    );
 
 }
 
+
+/* =========================================================
+   AUTHENTICATING SOUND
+========================================================= */
 
 function authenticateSound() {
 
@@ -1107,19 +1773,42 @@ function authenticateSound() {
         .04
     );
 
-    setTimeout(() => {
 
-        tone(
-            700,
-            .08,
-            "square",
-            .05
-        );
+    setTimeout(
+        () => {
 
-    }, 120);
+            tone(
+                700,
+                .08,
+                "square",
+                .05
+            );
+
+        },
+        120
+    );
+
+
+    setTimeout(
+        () => {
+
+            tone(
+                900,
+                .1,
+                "square",
+                .04
+            );
+
+        },
+        260
+    );
 
 }
 
+
+/* =========================================================
+   GRANTED SOUND
+========================================================= */
 
 function grantedSound() {
 
@@ -1130,27 +1819,138 @@ function grantedSound() {
         .08
     );
 
-    setTimeout(() => {
 
-        tone(
-            800,
-            .12,
-            "sine",
-            .09
+    setTimeout(
+        () => {
+
+            tone(
+                800,
+                .12,
+                "sine",
+                .09
+            );
+
+        },
+        130
+    );
+
+
+    setTimeout(
+        () => {
+
+            tone(
+                1200,
+                .4,
+                "sine",
+                .1
+            );
+
+        },
+        260
+    );
+
+}
+
+
+/* =========================================================
+   PRELOAD APPROVED AUDIO
+========================================================= */
+
+function prepareApprovedAudio() {
+
+    if (approvedAudio)
+        return;
+
+
+    approvedAudio =
+        new Audio(
+            "approved.mp3"
         );
 
-    }, 130);
 
-    setTimeout(() => {
+    approvedAudio.preload =
+        "auto";
 
-        tone(
-            1200,
-            .4,
-            "sine",
-            .1
-        );
+    approvedAudio.volume =
+        1;
 
-    }, 260);
+
+    approvedAudio.load();
+
+}
+
+
+/* =========================================================
+   PLAY APPROVED VOICE
+========================================================= */
+
+function playApprovedVoice() {
+
+    return new Promise(
+        resolve => {
+
+            prepareApprovedAudio();
+
+
+            if (!approvedAudio) {
+
+                resolve(false);
+
+                return;
+
+            }
+
+
+            approvedAudio.pause();
+
+            approvedAudio.currentTime =
+                0;
+
+
+            approvedAudio.onended =
+                () => {
+
+                    resolve(true);
+
+                };
+
+
+            approvedAudio.onerror =
+                error => {
+
+                    console.warn(
+                        "approved.mp3 tidak dapat dimainkan.",
+                        error
+                    );
+
+                    resolve(false);
+
+                };
+
+
+            const playPromise =
+                approvedAudio.play();
+
+
+            if (playPromise) {
+
+                playPromise.catch(
+                    error => {
+
+                        console.warn(
+                            "approved.mp3 autoplay blocked.",
+                            error
+                        );
+
+                        resolve(false);
+
+                    }
+                );
+
+            }
+
+        }
+    );
 
 }
 
@@ -1159,108 +1959,446 @@ function grantedSound() {
    ACTIVATE DISPLAY
 ========================================================= */
 
-document
-    .getElementById(
-        "activateAudio"
-    )
-    .addEventListener(
-        "click",
-        () => {
+activateAudio.addEventListener(
+    "click",
+    () => {
 
-            initAudio();
+        /*
+           Ini penting untuk membenarkan
+           browser TV memainkan audio.
+        */
 
-            lockSound();
+        initAudio();
 
-            audioStart.classList.add(
-                "hide"
-            );
+        lockSound();
 
-        }
-    );
+        prepareApprovedAudio();
+
+
+        /*
+           Sembunyikan activation screen.
+        */
+
+        audioStart.classList.add(
+            "hide"
+        );
+
+
+        connection.innerText =
+            "SYSTEM READY";
+
+
+        console.log(
+            "Display activated."
+        );
+
+    }
+);
 
 
 /* =========================================================
-   FIREBASE ACCESS SIGNAL
-   index.html menulis event ke safe/access.
-   display.html mendengar perubahan secara realtime.
+   EVENT STATE
 ========================================================= */
 
 let lastEventId = null;
+
 let ceremonyRunning = false;
 
-// Hanya terima event yang benar-benar berlaku selepas display dibuka.
-// Ini mengelakkan banner lama daripada dimainkan semula ketika display
-// baru sahaja dimuatkan.
-const displayStartedAt = Date.now();
-const bannerVideo = document.getElementById("bannerVideo");
 
-function receiveAccessSignal(data = {}) {
+/*
+   Masa display mula.
 
-    if (ceremonyRunning) return;
+   Event lama tidak akan
+   dimainkan semula ketika TV
+   baru sahaja dibuka.
+*/
 
-    const eventId = data.eventId || String(Date.now());
+const displayStartedAt =
+    Date.now();
 
-    // Elak event Firebase yang sama dimainkan berulang kali
-    if (eventId === lastEventId) return;
-    lastEventId = eventId;
-    ceremonyRunning = true;
 
-    connection.innerText = "ACCESS SIGNAL RECEIVED";
+/* =========================================================
+   RECEIVE ACCESS SIGNAL
+========================================================= */
 
-    /* AUTHENTICATING */
-    authScreen.classList.add("active");
+async function receiveAccessSignal(
+    data = {}
+) {
+
+    /*
+       Jangan proses dua kali.
+    */
+
+    if (ceremonyRunning)
+        return;
+
+
+    const eventId =
+        data.eventId ||
+        String(Date.now());
+
+
+    /*
+       Elak event yang sama
+       dimainkan berulang kali.
+    */
+
+    if (
+        eventId ===
+        lastEventId
+    ) {
+
+        return;
+
+    }
+
+
+    lastEventId =
+        eventId;
+
+
+    ceremonyRunning =
+        true;
+
+
+    console.log(
+        "ACCESS SIGNAL RECEIVED:",
+        data
+    );
+
+
+    connection.innerText =
+        "ACCESS SIGNAL RECEIVED";
+
+
+    /* =====================================================
+       STEP 1
+       AUTHENTICATING
+    ===================================================== */
+
+    lockScreen.classList.add(
+        "hide"
+    );
+
+
+    authScreen.classList.add(
+        "active"
+    );
+
+
+    grantedScreen.classList.remove(
+        "active"
+    );
+
+
+    banner.classList.remove(
+        "active"
+    );
+
+
+    authSmall.innerText =
+        "GESTURE SIGNAL RECEIVED";
+
+
     authenticateSound();
 
-    setTimeout(() => {
 
-        authScreen.classList.remove("active");
-        grantedScreen.classList.add("active");
-        grantedSound();
+    /*
+       Biometric processing
+       animation.
+    */
 
-    }, 2200);
+    await delay(
+        1800
+    );
 
-    /* REVEAL ACTUAL BANNER IMAGE */
-    setTimeout(() => {
 
-        grantedScreen.classList.remove("active");
-        lockScreen.classList.add("hide");
-        banner.classList.add("active");
+    /* =====================================================
+       STEP 2
+       PALM BIOMETRIC SIGNAL RECEIVED
+    ===================================================== */
 
-        // Mulakan video tepat ketika banner dipaparkan.
-        bannerVideo.currentTime = 0;
-        bannerVideo.play().catch(err => {
-            console.warn("Banner video play failed:", err);
-        });
+    authSmall.innerText =
+        "AUTHENTICATION PALM BIOMETRIC SIGNAL RECEIVED";
 
-        connection.innerText = "CEREMONY DISPLAY ACTIVE";
 
-    }, 4300);
+    connection.innerText =
+        "PALM BIOMETRIC SIGNAL RECEIVED";
+
+
+    /*
+       Beri sedikit masa supaya
+       mesej jelas kelihatan
+       sebelum suara bermula.
+    */
+
+    await delay(
+        500
+    );
+
+
+    /* =====================================================
+       STEP 3
+       PLAY approved.mp3
+    ===================================================== */
+
+    const voicePlayed =
+        await playApprovedVoice();
+
+
+    /*
+       Jika audio gagal dimainkan,
+       jangan hentikan ceremony.
+    */
+
+    if (!voicePlayed) {
+
+        console.warn(
+            "approved.mp3 gagal dimainkan. Teruskan ceremony."
+        );
+
+        await delay(
+            1000
+        );
+
+    }
+
+
+    /* =====================================================
+       STEP 4
+       ACCESS GRANTED
+    ===================================================== */
+
+    authScreen.classList.remove(
+        "active"
+    );
+
+
+    grantedScreen.classList.add(
+        "active"
+    );
+
+
+    connection.innerText =
+        "AUTHENTICATION SUCCESSFUL";
+
+
+    grantedSound();
+
+
+    await delay(
+        1800
+    );
+
+
+    /* =====================================================
+       STEP 5
+       BANNER VIDEO
+    ===================================================== */
+
+    grantedScreen.classList.remove(
+        "active"
+    );
+
+
+    banner.classList.add(
+        "active"
+    );
+
+
+    connection.innerText =
+        "CEREMONY DISPLAY ACTIVE";
+
+
+    /*
+       Reset video.
+    */
+
+    bannerVideo.currentTime =
+        0;
+
+
+    /*
+       Pastikan video tidak muted.
+    */
+
+    bannerVideo.muted =
+        false;
+
+
+    try {
+
+        await bannerVideo.play();
+
+    }
+
+    catch (error) {
+
+        console.warn(
+            "Banner video autoplay blocked:",
+            error
+        );
+
+
+        /*
+           Fallback.
+
+           Jika browser TV menghalang
+           audio video, video masih
+           boleh dimainkan secara muted.
+        */
+
+        try {
+
+            bannerVideo.muted =
+                true;
+
+            await bannerVideo.play();
+
+        }
+
+        catch (fallbackError) {
+
+            console.error(
+                "Banner video failed:",
+                fallbackError
+            );
+
+        }
+
+    }
+
 }
 
 
-/* Listen to Firebase Realtime Database */
-accessRef.on("value", snapshot => {
+/* =========================================================
+   DELAY HELPER
+========================================================= */
 
-    const data = snapshot.val();
+function delay(
+    milliseconds
+) {
 
-    if (!data) return;
+    return new Promise(
+        resolve =>
+            setTimeout(
+                resolve,
+                milliseconds
+            )
+    );
 
-    const eventTime = Number(data.timestamp || 0);
+}
 
-    if (
-        data.status === "opened" &&
-        data.eventId &&
-        eventTime >= (displayStartedAt - 15000)
-    ) {
-        receiveAccessSignal(data);
-    }
 
-}, error => {
+/* =========================================================
+   FIREBASE LISTENER
+========================================================= */
 
-    console.error("Firebase listener error:", error);
-    connection.innerText = "FIREBASE ERROR";
+if (
+    firebaseReady &&
+    accessRef
+) {
 
-});
+    accessRef.on(
+
+        "value",
+
+        snapshot => {
+
+            const data =
+                snapshot.val();
+
+
+            if (!data)
+                return;
+
+
+            /*
+               Hanya event OPENED.
+            */
+
+            if (
+                data.status !==
+                "opened"
+            ) {
+
+                return;
+
+            }
+
+
+            /*
+               Event mesti mempunyai
+               eventId.
+            */
+
+            if (!data.eventId)
+                return;
+
+
+            /*
+               Semak timestamp.
+
+               Event yang sudah wujud lama
+               tidak dimainkan ketika TV
+               baru dibuka.
+            */
+
+            const eventTime =
+                Number(
+                    data.timestamp ||
+                    0
+                );
+
+
+            if (
+                eventTime &&
+                eventTime <
+                (
+                    displayStartedAt -
+                    15000
+                )
+            ) {
+
+                console.log(
+                    "Old Firebase event ignored:",
+                    data.eventId
+                );
+
+                return;
+
+            }
+
+
+            receiveAccessSignal(
+                data
+            );
+
+        },
+
+        error => {
+
+            console.error(
+                "Firebase listener error:",
+                error
+            );
+
+
+            connection.innerText =
+                "FIREBASE ERROR";
+
+        }
+
+    );
+
+}
+
+else {
+
+    connection.innerText =
+        "FIREBASE NOT READY";
+
+}
 
 
 /* =========================================================
@@ -1278,17 +2416,29 @@ for (
             "div"
         );
 
+
     particle.className =
         "particle";
 
+
     particle.style.left =
-        Math.random() * 100 + "%";
+        Math.random() *
+        100 +
+        "%";
+
 
     particle.style.animationDelay =
-        Math.random() * 5 + "s";
+        Math.random() *
+        7 +
+        "s";
+
 
     particle.style.animationDuration =
-        3 + Math.random() * 7 + "s";
+        4 +
+        Math.random() *
+        7 +
+        "s";
+
 
     document.body.appendChild(
         particle
@@ -1316,6 +2466,18 @@ grantedScreen.classList.remove(
 banner.classList.remove(
     "active"
 );
+
+
+connection.innerText =
+    "SYSTEM STANDBY";
+
+
+/* =========================================================
+   VIDEO PRELOAD
+========================================================= */
+
+bannerVideo.load();
+
 
 </script>
 
