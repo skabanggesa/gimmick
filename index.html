@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>SAFE 2026 — Gesture Controller</title>
 
 <style>
 /* =========================================================
-   GLOBAL
+   GLOBAL & THEME VARIABLES
 ========================================================= */
 
 * {
     box-sizing: border-box;
+    user-select: none;
 }
 
 html,
@@ -23,989 +23,585 @@ body {
     overflow: hidden;
     background: #020407;
     color: white;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
     position: relative;
 }
 
-
 /* =========================================================
-   CAMERA
+   CAMERA & HUD BACKGROUND
 ========================================================= */
 
 #camera {
     position: fixed;
     inset: 0;
-
     width: 100%;
     height: 100%;
-
     object-fit: cover;
-
     transform: scaleX(-1);
-
-    opacity: .16;
-
-    filter:
-        grayscale(1)
-        contrast(1.2);
-
+    opacity: .18;
+    filter: grayscale(1) contrast(1.3) brightness(0.8);
     z-index: 0;
 }
-
-
-/* =========================================================
-   DARK OVERLAY
-========================================================= */
 
 .overlay {
     position: fixed;
     inset: 0;
-
     background:
         radial-gradient(
             circle at center,
-            rgba(0,190,255,.12),
-            transparent 34%
+            rgba(0, 190, 255, .15),
+            transparent 40%
         ),
         radial-gradient(
             circle at 50% 45%,
-            rgba(0,120,255,.06),
-            transparent 55%
+            rgba(0, 120, 255, .08),
+            transparent 60%
         ),
         linear-gradient(
-            rgba(0,0,0,.84),
-            rgba(0,0,0,.97)
+            rgba(0, 0, 0, .85),
+            rgba(0, 0, 0, .98)
         );
-
     z-index: 2;
+    pointer-events: none;
 }
-
-
-/* =========================================================
-   GRID
-========================================================= */
 
 .grid {
     position: fixed;
     inset: 0;
-
     z-index: 3;
-
-    opacity: .15;
-
+    opacity: .12;
     background-image:
         linear-gradient(
-            rgba(0,210,255,.25) 1px,
+            rgba(0, 210, 255, .25) 1px,
             transparent 1px
         ),
         linear-gradient(
             90deg,
-            rgba(0,210,255,.25) 1px,
+            rgba(0, 210, 255, .25) 1px,
             transparent 1px
         );
-
-    background-size: 50px 50px;
+    background-size: 40px 40px;
+    pointer-events: none;
 }
 
-
 /* =========================================================
-   HEADER
+   HEADER & TITLE
 ========================================================= */
 
 header {
     position: fixed;
-
     top: 0;
     left: 0;
     right: 0;
-
     height: 88px;
-
     z-index: 20;
-
     display: flex;
     align-items: center;
     justify-content: space-between;
-
     padding: 0 38px;
-
-    background: rgba(0,0,0,.82);
-
-    border-bottom:
-        1px solid
-        rgba(0,210,255,.4);
+    background: rgba(2, 6, 12, .88);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(0, 210, 255, .35);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
 
 .brand {
     font-size: 13px;
-
+    font-weight: 700;
     letter-spacing: 3px;
-
     color: #00d9ff;
-
-    text-shadow:
-        0 0 10px rgba(0,217,255,.7);
+    text-shadow: 0 0 10px rgba(0, 217, 255, .7);
 }
-
-
-/* =========================================================
-   TITLE + HALO LIGHT
-========================================================= */
 
 .title-wrap {
     position: absolute;
-
     left: 50%;
     top: 50%;
-
     transform: translate(-50%, -50%);
-
     width: min(760px, 65vw);
-
     text-align: center;
 }
 
 .title-halo {
     position: absolute;
-
     left: 50%;
     top: 50%;
-
     width: 430px;
     height: 80px;
-
-    transform:
-        translate(-50%, -50%);
-
+    transform: translate(-50%, -50%);
     border-radius: 50%;
-
-    background:
-        radial-gradient(
-            ellipse,
-            rgba(0,217,255,.32),
-            rgba(0,217,255,.10) 35%,
-            transparent 70%
-        );
-
+    background: radial-gradient(
+        ellipse,
+        rgba(0, 217, 255, .32),
+        rgba(0, 217, 255, .10) 35%,
+        transparent 70%
+    );
     filter: blur(14px);
-
     opacity: .85;
-
-    animation:
-        haloPulse 2.8s ease-in-out infinite;
+    animation: haloPulse 2.8s ease-in-out infinite;
 }
 
 .title-halo::before {
     content: "";
-
     position: absolute;
-
     inset: -25px;
-
     border-radius: 50%;
-
-    border:
-        1px solid
-        rgba(0,217,255,.25);
-
-    box-shadow:
-        0 0 20px rgba(0,217,255,.20),
-        0 0 50px rgba(0,217,255,.12);
-
-    animation:
-        haloRotate 7s linear infinite;
+    border: 1px solid rgba(0, 217, 255, .25);
+    box-shadow: 0 0 20px rgba(0, 217, 255, .20), 0 0 50px rgba(0, 217, 255, .12);
+    animation: haloRotate 7s linear infinite;
 }
 
 .title-halo::after {
     content: "";
-
     position: absolute;
-
     left: 15%;
     right: 15%;
     top: 50%;
-
     height: 1px;
-
-    background:
-        linear-gradient(
-            90deg,
-            transparent,
-            #00d9ff,
-            white,
-            #00d9ff,
-            transparent
-        );
-
-    box-shadow:
-        0 0 10px #00d9ff,
-        0 0 25px #00d9ff;
-
+    background: linear-gradient(
+        90deg,
+        transparent,
+        #00d9ff,
+        white,
+        #00d9ff,
+        transparent
+    );
+    box-shadow: 0 0 10px #00d9ff, 0 0 25px #00d9ff;
     opacity: .8;
 }
 
 .title {
     position: relative;
-
     z-index: 2;
-
-    font-size:
-        clamp(
-            20px,
-            2.4vw,
-            34px
-        );
-
+    font-size: clamp(18px, 2.2vw, 32px);
     font-weight: 900;
-
     letter-spacing: 1.5px;
-
-    line-height: 1.15;
-
+    line-height: 1.25;
     text-align: center;
-
     color: white;
-
     text-shadow:
-        0 0 8px rgba(255,255,255,.7),
-        0 0 18px rgba(0,217,255,.65),
-        0 0 38px rgba(0,140,255,.35);
-
-    animation:
-        titleGlow 2.5s ease-in-out infinite;
+        0 0 8px rgba(255, 255, 255, .8),
+        0 0 18px rgba(0, 217, 255, .65),
+        0 0 38px rgba(0, 140, 255, .35);
+    animation: titleGlow 2.5s ease-in-out infinite;
 }
 
-.title::after {
+.system {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    display: flex;
+    align-items: center;
+}
+
+.system::before {
     content: "";
-
-    position: absolute;
-
-    left: 15%;
-    width: 70%;
-
-    bottom: -10px;
-
-    height: 2px;
-
-    background:
-        linear-gradient(
-            90deg,
-            transparent,
-            #00d9ff,
-            white,
-            #00d9ff,
-            transparent
-        );
-
-    box-shadow:
-        0 0 8px #00d9ff,
-        0 0 20px #00d9ff;
-
-    animation:
-        titleShimmer 2.5s linear infinite;
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-right: 8px;
+    border-radius: 50%;
+    background: #00ffae;
+    box-shadow: 0 0 12px #00ffae, 0 0 25px rgba(0, 255, 174, .5);
+    animation: systemPulse 1.5s infinite;
 }
+
+/* =========================================================
+   KEYFRAME ANIMATIONS
+========================================================= */
 
 @keyframes haloPulse {
-
-    0%,
-    100% {
-        transform:
-            translate(-50%, -50%)
-            scale(.85);
-
+    0%, 100% {
+        transform: translate(-50%, -50%) scale(.85);
         opacity: .45;
     }
-
     50% {
-        transform:
-            translate(-50%, -50%)
-            scale(1.15);
-
+        transform: translate(-50%, -50%) scale(1.15);
         opacity: 1;
     }
 }
 
 @keyframes haloRotate {
-
-    from {
-        transform: rotate(0deg);
-    }
-
-    to {
-        transform: rotate(360deg);
-    }
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
 
 @keyframes titleGlow {
-
-    0%,
-    100% {
-        filter:
-            brightness(.95);
-    }
-
-    50% {
-        filter:
-            brightness(1.25);
-    }
-}
-
-@keyframes titleShimmer {
-
-    0% {
-        opacity: .25;
-        transform: scaleX(.75);
-    }
-
-    50% {
-        opacity: 1;
-        transform: scaleX(1);
-    }
-
-    100% {
-        opacity: .25;
-        transform: scaleX(.75);
-    }
-}
-
-
-.system {
-    font-size: 12px;
-
-    letter-spacing: 2px;
-}
-
-.system::before {
-    content: "";
-
-    display: inline-block;
-
-    width: 8px;
-    height: 8px;
-
-    margin-right: 8px;
-
-    border-radius: 50%;
-
-    background: #00ffae;
-
-    box-shadow:
-        0 0 12px #00ffae,
-        0 0 25px rgba(0,255,174,.5);
-
-    animation:
-        systemPulse 1.5s infinite;
+    0%, 100% { filter: brightness(.95); }
+    50% { filter: brightness(1.25); }
 }
 
 @keyframes systemPulse {
-
-    0%,
-    100% {
-        opacity: .45;
-    }
-
-    50% {
-        opacity: 1;
-    }
+    0%, 100% { opacity: .45; }
+    50% { opacity: 1; }
 }
 
-
 /* =========================================================
-   MAIN
+   SCANNER AREA
 ========================================================= */
 
 main {
     position: fixed;
-
     inset: 88px 0 0;
-
     z-index: 5;
-
     display: flex;
-
     align-items: center;
     justify-content: center;
 }
-
-
-/* =========================================================
-   SCANNER
-========================================================= */
 
 .scanner {
     position: relative;
-
-    width:
-        min(
-            470px,
-            54vw
-        );
-
-    height:
-        min(
-            590px,
-            72vh
-        );
-
+    width: min(470px, 54vw);
+    height: min(590px, 72vh);
     display: flex;
-
     align-items: center;
     justify-content: center;
 }
 
-
-/* =========================================================
-   HAND SVG
-========================================================= */
-
 .hand-svg {
     position: absolute;
-
     width: 100%;
     height: 100%;
-
     opacity: .95;
+    transition: transform 0.3s ease;
 }
 
 .hand-shape {
-    fill:
-        rgba(
-            0,
-            150,
-            220,
-            .025
-        );
-
-    stroke:
-        #00cfff;
-
+    fill: rgba(0, 150, 220, .03);
+    stroke: #00cfff;
     stroke-width: 2;
-
-    filter:
-        drop-shadow(
-            0 0 8px
-            rgba(0,210,255,.8)
-        )
-        drop-shadow(
-            0 0 30px
-            rgba(0,150,255,.35)
-        );
-
-    animation:
-        handGlow 2s infinite alternate;
+    filter: drop-shadow(0 0 8px rgba(0, 210, 255, .8)) drop-shadow(0 0 30px rgba(0, 150, 255, .35));
+    animation: handGlow 2s infinite alternate;
 }
 
 @keyframes handGlow {
-
-    from {
-        opacity: .45;
-    }
-
-    to {
-        opacity: 1;
-    }
+    from { opacity: .45; }
+    to { opacity: 1; }
 }
-
-
-/* =========================================================
-   SCAN LINE
-========================================================= */
 
 .scan-line {
     position: absolute;
-
     left: 17%;
     right: 17%;
-
     height: 3px;
-
-    background:
-        linear-gradient(
-            90deg,
-            transparent,
-            #00d9ff,
-            white,
-            #00d9ff,
-            transparent
-        );
-
+    background: linear-gradient(
+        90deg,
+        transparent,
+        #00d9ff,
+        white,
+        #00d9ff,
+        transparent
+    );
     box-shadow:
         0 0 10px #00d9ff,
         0 0 30px #00d9ff,
-        0 0 60px rgba(0,217,255,.5);
-
-    animation:
-        scanning 2.3s infinite
-        ease-in-out;
+        0 0 60px rgba(0, 217, 255, .5);
+    animation: scanning 2.3s infinite ease-in-out;
 }
 
 @keyframes scanning {
-
-    0% {
-        top: 15%;
-        opacity: .1;
-    }
-
-    50% {
-        opacity: 1;
-    }
-
-    100% {
-        top: 84%;
-        opacity: .1;
-    }
+    0% { top: 15%; opacity: .1; }
+    50% { opacity: 1; }
+    100% { top: 84%; opacity: .1; }
 }
-
-
-/* =========================================================
-   RADAR
-========================================================= */
 
 .radar {
     position: absolute;
-
     width: 230px;
     height: 230px;
-
-    border:
-        1px solid
-        rgba(0,210,255,.18);
-
+    border: 1px solid rgba(0, 210, 255, .18);
     border-radius: 50%;
-
-    animation:
-        radarPulse 2s infinite;
+    animation: radarPulse 2s infinite;
 }
 
 .radar::before,
 .radar::after {
     content: "";
-
     position: absolute;
-
     inset: 25px;
-
-    border:
-        1px solid
-        rgba(0,210,255,.15);
-
+    border: 1px solid rgba(0, 210, 255, .15);
     border-radius: 50%;
 }
 
 .radar::after {
     inset: 50px;
-
-    border-color:
-        rgba(0,210,255,.12);
+    border-color: rgba(0, 210, 255, .12);
 }
 
 @keyframes radarPulse {
-
-    0%,
-    100% {
-        transform: scale(.85);
-        opacity: .2;
-    }
-
-    50% {
-        transform: scale(1);
-        opacity: .8;
-    }
+    0%, 100% { transform: scale(.85); opacity: .2; }
+    50% { transform: scale(1); opacity: .8; }
 }
 
-
 /* =========================================================
-   CENTER STATUS
+   CENTER STATUS & SCAN PROGRESS
 ========================================================= */
 
 .center-status {
     position: absolute;
-
     width: 100%;
-
-    top: 45%;
-
-    transform:
-        translateY(-50%);
-
+    top: 50%;
+    transform: translateY(-50%);
     text-align: center;
-
     pointer-events: none;
+    z-index: 10;
 }
 
 .icon {
     font-size: 52px;
-
     margin-bottom: 12px;
-
-    filter:
-        drop-shadow(
-            0 0 15px
-            #00d9ff
-        );
+    filter: drop-shadow(0 0 15px #00d9ff);
+    transition: all 0.3s ease;
 }
 
 .status-title {
-    font-size:
-        clamp(
-            20px,
-            2.2vw,
-            30px
-        );
-
+    font-size: clamp(20px, 2.2vw, 30px);
     font-weight: 800;
-
     letter-spacing: 3px;
-
-    text-shadow:
-        0 0 15px
-        rgba(0,217,255,.4);
+    text-shadow: 0 0 15px rgba(0, 217, 255, .4);
+    transition: color 0.3s ease;
 }
 
 .status-subtitle {
     margin-top: 10px;
-
     font-size: 11px;
-
     letter-spacing: 2px;
-
-    opacity: .55;
+    opacity: .75;
+    color: #a0d8ff;
 }
 
+/* Progress indicator bar during gesture holding */
+.progress-container {
+    width: 180px;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    margin: 15px auto 0;
+    overflow: hidden;
+    border: 1px solid rgba(0, 217, 255, 0.3);
+    display: none;
+}
+
+.progress-bar {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, #00d9ff, #00ffae);
+    box-shadow: 0 0 10px #00ffae;
+    transition: width 0.1s linear;
+}
 
 /* =========================================================
-   LEFT STATUS PANEL
+   LEFT TELEMETRY PANEL
 ========================================================= */
 
 .left-status-panel {
     position: fixed;
-
     left: 24px;
     top: 50%;
-
-    transform:
-        translateY(-50%);
-
+    transform: translateY(-50%);
     z-index: 30;
-
-    width: 190px;
-
+    width: 200px;
     display: flex;
-
     flex-direction: column;
-
-    gap: 10px;
+    gap: 12px;
 }
 
 .status-box {
     position: relative;
-
     min-height: 70px;
-
-    padding:
-        12px
-        14px
-        12px
-        16px;
-
-    background:
-        linear-gradient(
-            135deg,
-            rgba(0,20,30,.88),
-            rgba(0,0,0,.82)
-        );
-
-    border:
-        1px solid
-        rgba(0,210,255,.28);
-
-    border-left:
-        3px solid
-        rgba(0,210,255,.75);
-
-    box-shadow:
-        0 0 18px
-        rgba(0,210,255,.06),
-
-        inset 0 0 18px
-        rgba(0,210,255,.025);
-
+    padding: 12px 14px 12px 16px;
+    background: linear-gradient(
+        135deg,
+        rgba(0, 20, 30, .88),
+        rgba(0, 0, 0, .82)
+    );
+    border: 1px solid rgba(0, 210, 255, .28);
+    border-left: 3px solid rgba(0, 210, 255, .75);
+    box-shadow: 0 0 18px rgba(0, 210, 255, .06), inset 0 0 18px rgba(0, 210, 255, .025);
     text-align: left;
-
     font-size: 9px;
-
     letter-spacing: 1.8px;
-
-    color:
-        rgba(255,255,255,.58);
-
+    color: rgba(255, 255, 255, .58);
     overflow: hidden;
+    border-radius: 4px;
 }
 
 .status-box::after {
     content: "";
-
     position: absolute;
-
     top: 0;
     right: 0;
-
     width: 28px;
     height: 2px;
-
     background: #00d9ff;
-
-    box-shadow:
-        0 0 10px #00d9ff;
+    box-shadow: 0 0 10px #00d9ff;
 }
 
 .status-box span {
     display: block;
-
     margin-top: 7px;
-
     font-size: 13px;
-
     font-weight: 800;
-
     letter-spacing: 1.4px;
-
     color: #00d9ff;
-
-    text-shadow:
-        0 0 8px
-        rgba(0,217,255,.5);
+    text-shadow: 0 0 8px rgba(0, 217, 255, .5);
 }
 
 .status-label {
     display: flex;
-
     align-items: center;
-
     gap: 7px;
 }
 
 .status-dot {
     width: 7px;
     height: 7px;
-
     border-radius: 50%;
-
     background: currentColor;
-
-    box-shadow:
-        0 0 9px currentColor;
-
-    flex:
-        0 0 auto;
+    box-shadow: 0 0 9px currentColor;
+    flex: 0 0 auto;
 }
 
-.camera-box {
-    color: #00ffae;
-}
+.camera-box { color: #00ffae; }
+.camera-box span { color: #00ffae; text-shadow: 0 0 8px rgba(0, 255, 174, .5); }
 
-.camera-box span {
-    color: #00ffae;
+.hand-box { color: #ffca5c; }
+.hand-box span { color: #ffca5c; text-shadow: 0 0 8px rgba(255, 202, 92, .4); }
 
-    text-shadow:
-        0 0 8px
-        rgba(0,255,174,.5);
-}
+.gesture-box { color: #00d9ff; }
 
-.hand-box {
-    color: #ffca5c;
-}
-
-.hand-box span {
-    color: #ffca5c;
-
-    text-shadow:
-        0 0 8px
-        rgba(255,202,92,.4);
-}
-
-.gesture-box {
-    color: #00d9ff;
-}
-
-.access-box {
-    color: #ff5c68;
-}
-
-.access-box span {
-    color: #ff5c68;
-
-    text-shadow:
-        0 0 8px
-        rgba(255,92,104,.45);
-}
-
+.access-box { color: #ff5c68; }
+.access-box span { color: #ff5c68; text-shadow: 0 0 8px rgba(255, 92, 104, .45); }
 
 /* =========================================================
-   SOUND BUTTON
+   ACTION BUTTONS
 ========================================================= */
 
-.sound-button {
+.controls-container {
     position: fixed;
-
     right: 25px;
     bottom: 25px;
-
     z-index: 200;
+    display: flex;
+    gap: 10px;
+}
 
-    padding:
-        10px 16px;
-
-    background:
-        rgba(0,0,0,.8);
-
-    border:
-        1px solid
-        rgba(0,210,255,.4);
-
+.btn {
+    padding: 10px 18px;
+    background: rgba(0, 15, 25, .85);
+    border: 1px solid rgba(0, 210, 255, .5);
     color: white;
-
     cursor: pointer;
-
-    font-size: 10px;
-
+    font-size: 11px;
+    font-weight: 700;
     letter-spacing: 1px;
-
-    transition:
-        .25s ease;
+    transition: all .25s ease;
+    border-radius: 4px;
+    backdrop-filter: blur(5px);
 }
 
-.sound-button:hover {
-    background:
-        rgba(0,80,110,.4);
-
-    border-color:
-        #00d9ff;
-
-    box-shadow:
-        0 0 15px
-        rgba(0,217,255,.3);
+.btn:hover {
+    background: rgba(0, 80, 110, .6);
+    border-color: #00d9ff;
+    box-shadow: 0 0 15px rgba(0, 217, 255, .4);
+    transform: translateY(-2px);
 }
 
+.btn-reset {
+    border-color: rgba(255, 92, 104, 0.6);
+    color: #ff8892;
+}
+
+.btn-reset:hover {
+    background: rgba(120, 20, 30, 0.6);
+    border-color: #ff5c68;
+    box-shadow: 0 0 15px rgba(255, 92, 104, 0.4);
+}
 
 /* =========================================================
-   ACCESS SCREEN
+   ACCESS GRANTED SCREEN
 ========================================================= */
 
 .access {
     position: fixed;
-
     inset: 0;
-
     z-index: 100;
-
     display: flex;
-
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-
-    background: #000;
-
+    background: rgba(0, 3, 8, 0.96);
+    backdrop-filter: blur(12px);
     opacity: 0;
-
     visibility: hidden;
-
-    transition:
-        .5s;
+    transition: all .5s ease;
 }
 
 .access.active {
     opacity: 1;
-
     visibility: visible;
 }
 
 .access::before {
     content: "";
-
     position: absolute;
-
     inset: 0;
-
-    background:
-        radial-gradient(
-            circle,
-            rgba(0,255,174,.15),
-            transparent 35%
-        );
+    background: radial-gradient(
+        circle,
+        rgba(0, 255, 174, .18),
+        transparent 45%
+    );
 }
 
 .access-content {
     position: relative;
-
     z-index: 2;
-
     text-align: center;
-
-    animation:
-        accessIn .8s ease;
+    animation: accessIn .8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 @keyframes accessIn {
-
     from {
         opacity: 0;
-
-        transform:
-            scale(.7);
+        transform: scale(.7);
     }
-
     to {
         opacity: 1;
-
-        transform:
-            scale(1);
+        transform: scale(1);
     }
 }
 
 .access-symbol {
-    font-size: 100px;
-
+    font-size: 90px;
     color: #00ffae;
-
-    text-shadow:
-        0 0 20px #00ffae,
-        0 0 60px
-        rgba(0,255,174,.6);
+    text-shadow: 0 0 20px #00ffae, 0 0 60px rgba(0, 255, 174, .6);
 }
 
 .access-title {
-    margin-top: 20px;
-
-    font-size:
-        clamp(
-            40px,
-            6vw,
-            80px
-        );
-
+    margin-top: 15px;
+    font-size: clamp(36px, 5vw, 72px);
     font-weight: 900;
-
     letter-spacing: 5px;
-
     color: #00ffae;
-
-    text-shadow:
-        0 0 15px #00ffae,
-        0 0 40px rgba(0,255,174,.5);
+    text-shadow: 0 0 15px #00ffae, 0 0 40px rgba(0, 255, 174, .5);
 }
 
 .access-subtitle {
-    margin-top: 15px;
-
+    margin-top: 10px;
+    font-size: 16px;
     letter-spacing: 4px;
-
-    opacity: .7;
+    opacity: .8;
+    color: #a0ffdd;
 }
 
+.access-btn-reset {
+    margin-top: 35px;
+    padding: 12px 28px;
+    font-size: 13px;
+}
 
 /* =========================================================
    PARTICLES
@@ -1013,1629 +609,560 @@ main {
 
 .particle {
     position: fixed;
-
     width: 3px;
     height: 3px;
-
     background: #00d9ff;
-
     border-radius: 50%;
-
     opacity: .5;
-
     z-index: 4;
-
-    animation:
-        particleMove
-        5s linear infinite;
+    pointer-events: none;
+    animation: particleMove 5s linear infinite;
 }
 
 @keyframes particleMove {
-
-    from {
-        transform:
-            translateY(100vh);
-    }
-
-    to {
-        transform:
-            translateY(-20px);
-    }
+    from { transform: translateY(100vh); }
+    to { transform: translateY(-20px); }
 }
 
-
 /* =========================================================
-   RESPONSIVE
+   RESPONSIVE DESIGN
 ========================================================= */
 
 @media (max-width: 800px) {
+    header { height: 72px; padding: 0 14px; }
+    .brand { font-size: 9px; letter-spacing: 1.5px; }
+    .title-wrap { width: 62vw; }
+    .title { font-size: clamp(12px, 3.5vw, 20px); line-height: 1.15; }
+    .title-halo { width: 260px; height: 60px; }
+    .system { font-size: 8px; letter-spacing: 1px; }
 
-    header {
-        height: 72px;
-
-        padding: 0 14px;
-    }
-
-    .brand {
-        font-size: 9px;
-
-        letter-spacing: 1.5px;
-    }
-
-    .title-wrap {
-        width: 62vw;
-    }
-
-    .title {
-        font-size:
-            clamp(
-                12px,
-                4vw,
-                20px
-            );
-
-        line-height: 1.15;
-
-        letter-spacing: .5px;
-    }
-
-    .title-halo {
-        width: 260px;
-        height: 60px;
-    }
-
-    .system {
-        font-size: 7px;
-
-        letter-spacing: 1px;
-
-        white-space: nowrap;
-    }
-
-    .system::before {
-        width: 6px;
-        height: 6px;
-
-        margin-right: 4px;
-    }
-
-    main {
-        inset: 72px 0 0;
-
-        padding: 12px;
-    }
-
-    .scanner {
-        width:
-            min(
-                82vw,
-                380px
-            );
-
-        height:
-            min(
-                58vh,
-                500px
-            );
-
-        max-height:
-            calc(
-                100vh - 230px
-            );
-    }
-
-    .radar {
-        width:
-            min(
-                48vw,
-                220px
-            );
-
-        height:
-            min(
-                48vw,
-                220px
-            );
-    }
-
-    .center-status {
-        top: 50%;
-
-        padding: 0 18px;
-    }
-
-    .status-title {
-        font-size:
-            clamp(
-                15px,
-                4.5vw,
-                23px
-            );
-
-        letter-spacing: 2px;
-    }
-
-    .status-subtitle {
-        margin-top: 7px;
-
-        font-size: 8px;
-
-        line-height: 1.5;
-
-        letter-spacing: 1px;
-    }
+    main { inset: 72px 0 0; padding: 12px; }
+    .scanner { width: min(82vw, 380px); height: min(58vh, 500px); }
+    .radar { width: min(48vw, 220px); height: min(48vw, 220px); }
 
     .left-status-panel {
-        left: 10px;
-        right: 10px;
-
-        top: auto;
-        bottom: 10px;
-
-        transform: none;
-
-        width: auto;
-
-        display: grid;
-
-        grid-template-columns:
-            repeat(
-                2,
-                minmax(0,1fr)
-            );
-
-        gap: 6px;
+        left: 10px; right: 10px; top: auto; bottom: 10px;
+        transform: none; width: auto;
+        display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 6px;
     }
+    .status-box { min-height: 48px; padding: 7px 8px; font-size: 7px; }
+    .status-box span { margin-top: 3px; font-size: 10px; }
 
-    .status-box {
-        min-height: 48px;
-
-        padding:
-            7px
-            8px
-            7px
-            10px;
-
-        font-size: 6px;
-
-        letter-spacing: 1px;
-    }
-
-    .status-box span {
-        margin-top: 3px;
-
-        font-size: 9px;
-
-        letter-spacing: 1px;
-    }
-
-    .sound-button {
-        right: 10px;
-        bottom: 132px;
-
-        padding:
-            8px 10px;
-
-        font-size: 8px;
-    }
+    .controls-container { right: 10px; bottom: 125px; flex-direction: column; gap: 6px; }
+    .btn { padding: 8px 12px; font-size: 9px; }
 }
 
-
 @media (max-width: 420px) {
-
-    header {
-        height: 64px;
-    }
-
-    .brand {
-        display: none;
-    }
-
-    .title-wrap {
-        width: 72vw;
-    }
-
-    .title {
-        font-size: 13px;
-    }
-
-    .title-halo {
-        width: 230px;
-        height: 50px;
-    }
-
-    .system {
-        font-size: 6px;
-    }
-
-    main {
-        inset: 64px 0 0;
-    }
-
-    .scanner {
-        width: 88vw;
-
-        height:
-            min(
-                52vh,
-                390px
-            );
-
-        max-height:
-            calc(
-                100vh - 220px
-            );
-    }
-
-    .status-subtitle {
-        max-width: 230px;
-
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    .left-status-panel {
-        bottom: 8px;
-
-        gap: 5px;
-    }
-
-    .status-box {
-        min-height: 44px;
-
-        padding:
-            6px
-            7px
-            6px
-            8px;
-    }
-
-    .status-label {
-        gap: 5px;
-    }
-
-    .status-dot {
-        width: 5px;
-        height: 5px;
-    }
-
-    .sound-button {
-        bottom: 112px;
-
-        right: 8px;
-    }
+    .brand { display: none; }
+    .title-wrap { width: 75vw; }
+    .title { font-size: 12px; }
+    .left-status-panel { bottom: 8px; }
+    .controls-container { bottom: 115px; }
 }
 </style>
 </head>
 
-
 <body>
 
-<!-- =======================================================
-     CAMERA
-======================================================= -->
-
-<video
-    id="camera"
-    autoplay
-    muted
-    playsinline>
-</video>
-
+<!-- CAMERA VIDEO -->
+<video id="camera" autoplay muted playsinline></video>
 
 <div class="overlay"></div>
-
 <div class="grid"></div>
 
-
-<!-- =======================================================
-     HEADER
-======================================================= -->
-
+<!-- HEADER -->
 <header>
-
-    <div class="brand">
-        SAFE / 2026
-    </div>
-
-
+    <div class="brand">SAFE / 2026</div>
     <div class="title-wrap">
-
         <div class="title-halo"></div>
-
         <div class="title">
-
             PERASMIAN PROGRAM SAFE<br>
-           
             SK ABANG GESA 2026
-
         </div>
-
     </div>
-
-
-    <div class="system">
-        SYSTEM ONLINE
-    </div>
-
+    <div class="system">SYSTEM ONLINE</div>
 </header>
 
-
-<!-- =======================================================
-     MAIN SCANNER
-======================================================= -->
-
+<!-- MAIN SCANNER -->
 <main>
-
     <div class="scanner">
-
-        <!-- RADAR -->
-
         <div class="radar"></div>
-
-
-        <!-- SCANNING BEAM -->
-
         <div class="scan-line"></div>
 
-
-        <!-- HAND OUTLINE -->
-
-        <svg
-            class="hand-svg"
-            viewBox="0 0 470 590"
-            preserveAspectRatio="xMidYMid meet"
-            aria-hidden="true">
-
-            <path
-                class="hand-shape"
-                d="
+        <!-- HAND OUTLINE SVG -->
+        <svg class="hand-svg" viewBox="0 0 470 590" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+            <path class="hand-shape" d="
                 M235 540
-
                 C190 540 150 520 130 485
-
                 C110 450 110 410 115 375
-
                 L130 250
-
                 C132 235 143 225 157 225
-
                 C172 225 181 237 180 252
-
                 L173 345
-
                 L183 345
-
                 L187 145
-
                 C188 128 200 116 215 116
-
                 C230 116 241 128 241 144
-
                 L241 330
-
                 L251 330
-
                 L254 100
-
                 C255 82 267 70 282 70
-
                 C297 70 308 82 308 98
-
                 L308 330
-
                 L318 330
-
                 L322 135
-
                 C323 118 335 106 350 106
-
                 C365 106 376 118 376 134
-
                 L376 340
-
                 C390 327 401 316 414 319
-
                 C430 323 436 337 430 351
-
                 L395 420
-
                 C377 457 357 492 324 515
-
                 C300 532 269 540 235 540
-
-                Z
-                "
+                Z"
             />
-
         </svg>
 
-
-        <!-- CENTER STATUS -->
-
+        <!-- CENTER STATUS (FIXED MISSING CENTER ICON) -->
         <div class="center-status">
-
-           <div
-                class="status-title"
-                id="statusTitle">
-
-                GESTURE READY
-
+            <div class="icon" id="centerIcon">🖐</div>
+            <div class="status-title" id="statusTitle">GESTURE READY</div>
+            <div class="status-subtitle" id="statusSubtitle">PLACE YOUR PALM INSIDE THE SCAN AREA</div>
+            
+            <!-- Dynamic Progress bar -->
+            <div class="progress-container" id="progressContainer">
+                <div class="progress-bar" id="progressBar"></div>
             </div>
-
-
-            <div
-                class="status-subtitle"
-                id="statusSubtitle">
-
-                PLACE YOUR PALM INSIDE THE SCAN AREA
-
-            </div>
-
         </div>
-
     </div>
-
 </main>
 
-
-<!-- =======================================================
-     SYSTEM STATUS
-======================================================= -->
-
-<div
-    class="left-status-panel"
-    aria-label="System status">
-
-
-    <div
-        class="status-box camera-box">
-
+<!-- SYSTEM STATUS PANEL -->
+<div class="left-status-panel" aria-label="System status">
+    <div class="status-box camera-box">
         <div class="status-label">
-
-            <span class="status-dot"></span>
-
-            CAMERA ONLINE
-
+            <span class="status-dot"></span> CAMERA ONLINE
         </div>
-
-        <span id="cameraStatus">
-            STARTING
-        </span>
-
+        <span id="cameraStatus">STARTING</span>
     </div>
 
-
-    <div
-        class="status-box hand-box">
-
+    <div class="status-box hand-box">
         <div class="status-label">
-
-            <span class="status-dot"></span>
-
-            HAND STATUS
-
+            <span class="status-dot"></span> HAND STATUS
         </div>
-
-        <span id="handStatus">
-            NOT DETECTED
-        </span>
-
+        <span id="handStatus">NOT DETECTED</span>
     </div>
 
-
-    <div
-        class="status-box gesture-box">
-
+    <div class="status-box gesture-box">
         <div class="status-label">
-
-            <span class="status-dot"></span>
-
-            GESTURE
-
+            <span class="status-dot"></span> GESTURE
         </div>
-
-        <span id="gestureStatus">
-            STANDBY
-        </span>
-
+        <span id="gestureStatus">STANDBY</span>
     </div>
 
-
-    <div
-        class="status-box access-box">
-
+    <div class="status-box access-box">
         <div class="status-label">
-
-            <span class="status-dot"></span>
-
-            ACCESS
-
+            <span class="status-dot"></span> ACCESS
         </div>
-
-        <span id="accessStatus">
-            LOCKED
-        </span>
-
+        <span id="accessStatus">LOCKED</span>
     </div>
-
 </div>
 
+<!-- CONTROLS CONTAINER -->
+<div class="controls-container">
+    <button class="btn btn-reset" id="relockBtn">🔒 RE-LOCK SYSTEM</button>
+    <button class="btn" id="soundButton">🔊 ACTIVATE SOUND</button>
+</div>
 
-<!-- =======================================================
-     SOUND BUTTON
-======================================================= -->
-
-<button
-    class="sound-button"
-    id="soundButton">
-
-    🔊 ACTIVATE SOUND
-
-</button>
-
-
-<!-- =======================================================
-     ACCESS SCREEN
-======================================================= -->
-
-<div
-    id="accessScreen"
-    class="access">
-
+<!-- ACCESS UNLOCKED SCREEN -->
+<div id="accessScreen" class="access">
     <div class="access-content">
-
-        <div class="access-symbol">
-            🔓
-        </div>
-
-        <div class="access-title">
-            AKSES DIBUKA
-        </div>
-
-        <div class="access-subtitle">
-            GESTURE VERIFIED
-        </div>
-
+        <div class="access-symbol">🔓</div>
+        <div class="access-title">AKSES DIBUKA</div>
+        <div class="access-subtitle">GESTURE VERIFIED</div>
+        <button class="btn btn-reset access-btn-reset" id="modalRelockBtn">🔄 RESET / KUNCI SEMULA</button>
     </div>
-
 </div>
 
-
-<!-- =======================================================
-     MEDIAPIPE
-======================================================= -->
-
+<!-- MEDIAPIPE LIBRARIES -->
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
-
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
-
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
 
-
-<!-- =======================================================
-     FIREBASE
-======================================================= -->
-
+<!-- FIREBASE LIBRARIES -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
-
 <script>
-
 /* =========================================================
    FIREBASE CONFIGURATION
 ========================================================= */
 
 const firebaseConfig = {
-
-    apiKey:
-        "AIzaSyDNlFEnA9ZGLFTFCuwMK5ZMzv3D8Ww2BAo",
-
-    authDomain:
-        "smppro-2845e.firebaseapp.com",
-
-    databaseURL:
-        "https://smppro-2845e-default-rtdb.asia-southeast1.firebasedatabase.app",
-
-    projectId:
-        "smppro-2845e",
-
-    storageBucket:
-        "smppro-2845e.firebasestorage.app",
-
-    messagingSenderId:
-        "488762363336",
-
-    appId:
-        "1:488762363336:web:da4ccbb41c1236eaf184fd",
-
-    measurementId:
-        "G-NZR5BXZKR1"
+    apiKey: "AIzaSyDNlFEnA9ZGLFTFCuwMK5ZMzv3D8Ww2BAo",
+    authDomain: "smppro-2845e.firebaseapp.com",
+    databaseURL: "https://smppro-2845e-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "smppro-2845e",
+    storageBucket: "smppro-2845e.firebasestorage.app",
+    messagingSenderId: "488762363336",
+    appId: "1:488762363336:web:da4ccbb41c1236eaf184fd",
+    measurementId: "G-NZR5BXZKR1"
 };
 
-
-/* =========================================================
-   FIREBASE INITIALIZATION
-========================================================= */
-
 let db = null;
-
 let accessRef = null;
-
 let firebaseReady = false;
 
-
 try {
-
-    firebase.initializeApp(
-        firebaseConfig
-    );
-
-    db =
-        firebase.database();
-
-    /*
-       Kekalkan path ini kerana
-       display.html akan mendengar
-       path yang sama.
-    */
-
-    accessRef =
-        db.ref("safe/access");
-
+    firebase.initializeApp(firebaseConfig);
+    db = firebase.database();
+    accessRef = db.ref("safe/access");
     firebaseReady = true;
-
-    console.log(
-        "Firebase: ONLINE"
-    );
-
+    console.log("Firebase: ONLINE");
+} catch (error) {
+    console.error("Firebase initialization error:", error);
 }
 
-catch (error) {
-
-    console.error(
-        "Firebase initialization error:",
-        error
-    );
-
-}
-
-
 /* =========================================================
-   ELEMENTS
+   ELEMENT REFERENCES & STATE VARIABLES
 ========================================================= */
 
-const video =
-    document.getElementById(
-        "camera"
-    );
-
-const cameraStatus =
-    document.getElementById(
-        "cameraStatus"
-    );
-
-const handStatus =
-    document.getElementById(
-        "handStatus"
-    );
-
-const gestureStatus =
-    document.getElementById(
-        "gestureStatus"
-    );
-
-const accessStatus =
-    document.getElementById(
-        "accessStatus"
-    );
-
-const statusTitle =
-    document.getElementById(
-        "statusTitle"
-    );
-
-const statusSubtitle =
-    document.getElementById(
-        "statusSubtitle"
-    );
-
-const centerIcon =
-    document.getElementById(
-        "centerIcon"
-    );
-
-const accessScreen =
-    document.getElementById(
-        "accessScreen"
-    );
-
-const soundButton =
-    document.getElementById(
-        "soundButton"
-    );
-
-
-/* =========================================================
-   STATE
-========================================================= */
+const video = document.getElementById("camera");
+const cameraStatus = document.getElementById("cameraStatus");
+const handStatus = document.getElementById("handStatus");
+const gestureStatus = document.getElementById("gestureStatus");
+const accessStatus = document.getElementById("accessStatus");
+const statusTitle = document.getElementById("statusTitle");
+const statusSubtitle = document.getElementById("statusSubtitle");
+const centerIcon = document.getElementById("centerIcon");
+const accessScreen = document.getElementById("accessScreen");
+const soundButton = document.getElementById("soundButton");
+const relockBtn = document.getElementById("relockBtn");
+const modalRelockBtn = document.getElementById("modalRelockBtn");
+const progressContainer = document.getElementById("progressContainer");
+const progressBar = document.getElementById("progressBar");
 
 let opened = false;
-
 let palmStart = 0;
-
 let lastScanSound = 0;
-
 let cameraInstance = null;
-
 let handsInstance = null;
-
+const REQUIRED_PALM_TIME = 1200; // 1.2 Saat
 
 /* =========================================================
-   AUDIO ENGINE
+   WEB AUDIO SYNTHESIZER ENGINE
 ========================================================= */
 
 let audioContext = null;
 
-
 function initAudio() {
-
     if (!audioContext) {
-
-        audioContext =
-            new (
-                window.AudioContext ||
-                window.webkitAudioContext
-            )();
-
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
     }
-
-
-    if (
-        audioContext.state ===
-        "suspended"
-    ) {
-
+    if (audioContext.state === "suspended") {
         audioContext.resume();
-
     }
-
 }
 
+// Auto init audio on any user gesture click/tap
+document.addEventListener('pointerdown', () => initAudio(), { once: true });
 
-/* =========================================================
-   TONE
-========================================================= */
-
-function tone(
-    frequency,
-    duration = .12,
-    type = "sine",
-    volume = .08
-) {
-
-    if (!audioContext)
-        return;
-
-
-    const oscillator =
-        audioContext
-            .createOscillator();
-
-    const gain =
-        audioContext
-            .createGain();
-
-
-    oscillator.type =
-        type;
-
-    oscillator.frequency.value =
-        frequency;
-
-
-    gain.gain.setValueAtTime(
-        volume,
-        audioContext.currentTime
-    );
-
-
-    gain.gain.exponentialRampToValueAtTime(
-        .001,
-        audioContext.currentTime +
-            duration
-    );
-
-
-    oscillator.connect(gain);
-
-    gain.connect(
-        audioContext.destination
-    );
-
-
-    oscillator.start();
-
-    oscillator.stop(
-        audioContext.currentTime +
-            duration
-    );
-
-}
-
-
-/* =========================================================
-   SCANNING SOUND
-========================================================= */
-
-function scanSound() {
-
-    tone(
-        700,
-        .08,
-        "square",
-        .035
-    );
-
-}
-
-
-/* =========================================================
-   VERIFIED SOUND
-========================================================= */
-
-function verifiedSound() {
-
-    tone(
-        600,
-        .12,
-        "sine",
-        .08
-    );
-
-
-    setTimeout(
-        () => {
-
-            tone(
-                1000,
-                .18,
-                "sine",
-                .1
-            );
-
-        },
-        130
-    );
-
-}
-
-
-/* =========================================================
-   UNLOCK SOUND
-========================================================= */
-
-function unlockSound() {
-
-    tone(
-        250,
-        .12,
-        "square",
-        .1
-    );
-
-
-    setTimeout(
-        () => {
-
-            tone(
-                450,
-                .15,
-                "square",
-                .1
-            );
-
-        },
-        120
-    );
-
-
-    setTimeout(
-        () => {
-
-            tone(
-                900,
-                .3,
-                "sine",
-                .12
-            );
-
-        },
-        280
-    );
-
-}
-
-
-/* =========================================================
-   SOUND BUTTON
-========================================================= */
-
-soundButton.addEventListener(
-    "click",
-    () => {
-
-        initAudio();
-
-
-        tone(
-            800,
-            .15,
-            "sine",
-            .1
-        );
-
-
-        soundButton.innerText =
-            "🔊 SOUND ACTIVE";
-
-
-        soundButton.style.borderColor =
-            "#00ffae";
-
-    }
-);
-
-
-/* =========================================================
-   CAMERA
-========================================================= */
-
-async function startCamera() {
+function tone(frequency, duration = .12, type = "sine", volume = .08) {
+    if (!audioContext) return;
 
     try {
+        const oscillator = audioContext.createOscillator();
+        const gain = audioContext.createGain();
 
-        if (
-            !navigator.mediaDevices ||
-            !navigator.mediaDevices
-                .getUserMedia
-        ) {
+        oscillator.type = type;
+        oscillator.frequency.value = frequency;
 
-            throw new Error(
-                "Camera API tidak tersedia."
-            );
+        gain.gain.setValueAtTime(volume, audioContext.currentTime);
+        gain.gain.exponentialRampToValueAtTime(.001, audioContext.currentTime + duration);
 
-        }
+        oscillator.connect(gain);
+        gain.connect(audioContext.destination);
 
-
-        const stream =
-            await navigator
-                .mediaDevices
-                .getUserMedia({
-
-                    video: {
-
-                        width: {
-                            ideal: 1280
-                        },
-
-                        height: {
-                            ideal: 720
-                        },
-
-                        facingMode:
-                            "user"
-
-                    },
-
-                    audio: false
-
-                });
-
-
-        video.srcObject =
-            stream;
-
-
-        cameraStatus.innerText =
-            "ONLINE";
-
-
-        cameraStatus.style.color =
-            "#00ffae";
-
-
-        statusTitle.innerText =
-            "GESTURE READY";
-
-
-        statusSubtitle.innerText =
-            "PLACE YOUR PALM INSIDE THE SCAN AREA";
-
-
-        initializeHands();
-
+        oscillator.start();
+        oscillator.stop(audioContext.currentTime + duration);
+    } catch(e) {
+        console.warn("Audio playback error:", e);
     }
-
-    catch (error) {
-
-        console.error(
-            error
-        );
-
-
-        cameraStatus.innerText =
-            "ERROR";
-
-
-        statusTitle.innerText =
-            "CAMERA ERROR";
-
-
-        statusSubtitle.innerText =
-            "PLEASE ALLOW CAMERA ACCESS";
-
-
-        centerIcon.innerText =
-            "⚠";
-
-
-        centerIcon.style.color =
-            "#ff5c68";
-
-    }
-
 }
 
+function scanSound() {
+    tone(700, .08, "square", .035);
+}
+
+function verifiedSound() {
+    tone(600, .12, "sine", .08);
+    setTimeout(() => { tone(1000, .18, "sine", .1); }, 130);
+}
+
+function unlockSound() {
+    tone(250, .12, "square", .1);
+    setTimeout(() => { tone(450, .15, "square", .1); }, 120);
+    setTimeout(() => { tone(900, .3, "sine", .12); }, 280);
+}
+
+soundButton.addEventListener("click", () => {
+    initAudio();
+    tone(800, .15, "sine", .1);
+    soundButton.innerText = "🔊 SOUND ACTIVE";
+    soundButton.style.borderColor = "#00ffae";
+    soundButton.style.color = "#00ffae";
+});
 
 /* =========================================================
-   MEDIAPIPE HANDS
+   MEDIAPIPE VISION SYSTEM
 ========================================================= */
 
 function initializeHands() {
-
-    handsInstance =
-        new Hands({
-
-            locateFile:
-                function(file) {
-
-                    return (
-                        "https://cdn.jsdelivr.net/npm/" +
-                        "@mediapipe/hands/" +
-                        file
-                    );
-
-                }
-
-        });
-
-
-    handsInstance.setOptions({
-
-        maxNumHands: 1,
-
-        modelComplexity: 1,
-
-        minDetectionConfidence:
-            .6,
-
-        minTrackingConfidence:
-            .6
-
+    handsInstance = new Hands({
+        locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
     });
 
+    handsInstance.setOptions({
+        maxNumHands: 1,
+        modelComplexity: 1,
+        minDetectionConfidence: 0.6,
+        minTrackingConfidence: 0.6
+    });
 
-    handsInstance.onResults(
-        onResults
-    );
+    handsInstance.onResults(onResults);
 
-
-    cameraInstance =
-        new Camera(
-            video,
-            {
-
-                onFrame:
-                    async function() {
-
-                        await handsInstance
-                            .send({
-
-                                image:
-                                    video
-
-                            });
-
-                    },
-
-                width: 1280,
-
-                height: 720
-
+    cameraInstance = new Camera(video, {
+        onFrame: async () => {
+            if (video && handsInstance) {
+                await handsInstance.send({ image: video });
             }
-        );
+        },
+        width: 1280,
+        height: 720
+    });
 
-
-    cameraInstance.start();
-
-}
-
-
-function onResults(results) {
-
-    // Pastikan semua elemen UI wujud
-    if (
-        !handStatus ||
-        !gestureStatus ||
-        !statusTitle ||
-        !statusSubtitle
-    ) {
-        console.error(
-            "UI ELEMENT ERROR:",
-            {
-                handStatus,
-                gestureStatus,
-                statusTitle,
-                statusSubtitle
+    cameraInstance.start()
+        .then(() => {
+            cameraStatus.innerText = "ONLINE";
+            cameraStatus.style.color = "#00ffae";
+            if (statusTitle) statusTitle.innerText = "GESTURE READY";
+            if (statusSubtitle) statusSubtitle.innerText = "PLACE YOUR PALM INSIDE THE SCAN AREA";
+        })
+        .catch(err => {
+            console.error("Camera start error:", err);
+            cameraStatus.innerText = "ERROR";
+            cameraStatus.style.color = "#ff5c68";
+            if (statusTitle) statusTitle.innerText = "CAMERA ERROR";
+            if (statusSubtitle) statusSubtitle.innerText = "PLEASE ALLOW CAMERA PERMISSION";
+            if (centerIcon) {
+                centerIcon.innerText = "⚠️";
+                centerIcon.style.color = "#ff5c68";
             }
-        );
-
-        return;
-    }
-
-
-    /* =====================================================
-       NO HAND DETECTED
-    ===================================================== */
-
-    if (
-        !results.multiHandLandmarks ||
-        results.multiHandLandmarks.length === 0
-    ) {
-
-        handStatus.innerText = "NOT DETECTED";
-
-        gestureStatus.innerText = "STANDBY";
-
-        statusTitle.innerText = "GESTURE READY";
-
-        statusSubtitle.innerText =
-            "PLACE YOUR PALM INSIDE THE SCAN AREA";
-
-        palmStart = 0;
-
-        return;
-    }
-
-
-    /* =====================================================
-       HAND DETECTED
-    ===================================================== */
-
-    const landmarks =
-        results.multiHandLandmarks[0];
-
-
-    handStatus.innerText =
-        "DETECTED";
-
-
-    const fingers =
-        countOpenFingers(landmarks);
-
-
-    /* =====================================================
-       OPEN PALM
-    ===================================================== */
-
-    if (fingers >= 4) {
-
-        gestureStatus.innerText =
-            "SCANNING";
-
-        statusTitle.innerText =
-            "ANALYZING PALM";
-
-        statusSubtitle.innerText =
-            "BIOMETRIC GESTURE ANALYSIS";
-
-
-        const now =
-            Date.now();
-
-
-        /* SCAN SOUND */
-
-        if (
-            now - lastScanSound > 280
-        ) {
-
-            scanSound();
-
-            lastScanSound =
-                now;
-        }
-
-
-        /* START PALM TIMER */
-
-        if (!palmStart) {
-
-            palmStart =
-                now;
-        }
-
-
-        /* =================================================
-           PALM MUST REMAIN FOR 1.2 SECONDS
-        ================================================= */
-
-        if (
-            now - palmStart > 1200 &&
-            !opened
-        ) {
-
-            openAccess();
-        }
-
-    }
-
-
-    /* =====================================================
-       INVALID GESTURE
-    ===================================================== */
-
-    else {
-
-        gestureStatus.innerText =
-            "INVALID";
-
-        statusTitle.innerText =
-            "HAND DETECTED";
-
-        statusSubtitle.innerText =
-            "OPEN PALM REQUIRED";
-
-        palmStart = 0;
-    }
-
+        });
 }
 
 /* =========================================================
-   COUNT OPEN FINGERS
+   LANDMARK TRACKING & GESTURE ANALYSIS
 ========================================================= */
 
-function countOpenFingers(
-    points
-) {
+function onResults(results) {
+    if (opened) return; // Ignore if already verified and opened
 
-    let count = 0;
+    /* --- NO HAND DETECTED --- */
+    if (!results.multiHandLandmarks || results.multiHandLandmarks.length === 0) {
+        handStatus.innerText = "NOT DETECTED";
+        gestureStatus.innerText = "STANDBY";
+        statusTitle.innerText = "GESTURE READY";
+        statusTitle.style.color = "#ffffff";
+        statusSubtitle.innerText = "PLACE YOUR PALM INSIDE THE SCAN AREA";
+        centerIcon.innerText = "🖐";
+        centerIcon.style.color = "#00d9ff";
 
-
-    /*
-       INDEX
-    */
-
-    if (
-        points[8].y <
-        points[6].y
-    ) {
-
-        count++;
-
+        progressContainer.style.display = "none";
+        progressBar.style.width = "0%";
+        palmStart = 0;
+        return;
     }
 
+    /* --- HAND DETECTED --- */
+    const landmarks = results.multiHandLandmarks[0];
+    handStatus.innerText = "DETECTED";
 
-    /*
-       MIDDLE
-    */
+    const fingers = countOpenFingers(landmarks);
 
-    if (
-        points[12].y <
-        points[10].y
-    ) {
+    /* --- PALM OPEN (4 OR 5 FINGERS) --- */
+    if (fingers >= 4) {
+        gestureStatus.innerText = "SCANNING";
+        statusTitle.innerText = "ANALYZING PALM";
+        statusTitle.style.color = "#00d9ff";
+        statusSubtitle.innerText = "HOLD PALM STEADY FOR BIOMETRIC SCAN";
+        centerIcon.innerText = "✋";
+        centerIcon.style.color = "#00d9ff";
 
-        count++;
+        const now = Date.now();
 
+        if (now - lastScanSound > 280) {
+            scanSound();
+            lastScanSound = now;
+        }
+
+        if (!palmStart) {
+            palmStart = now;
+        }
+
+        // Calculate and render progress percentage
+        const elapsed = now - palmStart;
+        const progressPercent = Math.min((elapsed / REQUIRED_PALM_TIME) * 100, 100);
+        progressContainer.style.display = "block";
+        progressBar.style.width = progressPercent + "%";
+
+        /* VERIFICATION TRIGGER */
+        if (elapsed >= REQUIRED_PALM_TIME && !opened) {
+            openAccess();
+        }
+    } 
+    /* --- INVALID GESTURE --- */
+    else {
+        gestureStatus.innerText = "INVALID";
+        statusTitle.innerText = "HAND DETECTED";
+        statusTitle.style.color = "#ffca5c";
+        statusSubtitle.innerText = "OPEN PALM REQUIRED (SPREAD FINGERS)";
+        centerIcon.innerText = "✊";
+        centerIcon.style.color = "#ffca5c";
+
+        progressContainer.style.display = "none";
+        progressBar.style.width = "0%";
+        palmStart = 0;
     }
-
-
-    /*
-       RING
-    */
-
-    if (
-        points[16].y <
-        points[14].y
-    ) {
-
-        count++;
-
-    }
-
-
-    /*
-       PINKY
-    */
-
-    if (
-        points[20].y <
-        points[18].y
-    ) {
-
-        count++;
-
-    }
-
-
-    /*
-       THUMB
-
-       Menggunakan jarak
-       relatif supaya lebih
-       stabil untuk kamera
-    */
-
-    const thumbDistance =
-        Math.hypot(
-
-            points[4].x -
-            points[5].x,
-
-            points[4].y -
-            points[5].y
-
-        );
-
-
-    const thumbBaseDistance =
-        Math.hypot(
-
-            points[3].x -
-            points[5].x,
-
-            points[3].y -
-            points[5].y
-
-        );
-
-
-    if (
-        thumbDistance >
-        thumbBaseDistance
-    ) {
-
-        count++;
-
-    }
-
-
-    return count;
-
 }
 
+/* =========================================================
+   FINGER CALCULATION LOGIC
+========================================================= */
+
+function countOpenFingers(points) {
+    let count = 0;
+
+    // Index Finger
+    if (points[8].y < points[6].y) count++;
+    // Middle Finger
+    if (points[12].y < points[10].y) count++;
+    // Ring Finger
+    if (points[16].y < points[14].y) count++;
+    // Pinky Finger
+    if (points[20].y < points[18].y) count++;
+
+    // Thumb relative distance
+    const thumbDistance = Math.hypot(points[4].x - points[5].x, points[4].y - points[5].y);
+    const thumbBaseDistance = Math.hypot(points[3].x - points[5].x, points[3].y - points[5].y);
+
+    if (thumbDistance > thumbBaseDistance) count++;
+
+    return count;
+}
 
 /* =========================================================
-   OPEN ACCESS
+   UNLOCK ACCESS & FIREBASE SYNC
 ========================================================= */
 
 function openAccess() {
-
-    if (opened)
-        return;
-
-
+    if (opened) return;
     opened = true;
 
+    gestureStatus.innerText = "VERIFIED";
+    accessStatus.innerText = "OPEN";
+    statusTitle.innerText = "GESTURE VERIFIED";
+    statusTitle.style.color = "#00ffae";
+    statusSubtitle.innerText = "ACCESS AUTHORIZED";
+    
+    centerIcon.innerText = "✓";
+    centerIcon.style.color = "#00ffae";
+    gestureStatus.style.color = "#00ffae";
+    accessStatus.style.color = "#00ffae";
 
-    /*
-       UPDATE UI
-    */
-
-    gestureStatus.innerText =
-        "VERIFIED";
-
-
-    accessStatus.innerText =
-        "OPEN";
-
-
-    statusTitle.innerText =
-        "GESTURE VERIFIED";
-
-
-    statusSubtitle.innerText =
-        "ACCESS AUTHORIZED";
-
-
-    centerIcon.innerText =
-        "✓";
-
-
-    centerIcon.style.color =
-        "#00ffae";
-
-
-    gestureStatus.style.color =
-        "#00ffae";
-
-
-    accessStatus.style.color =
-        "#00ffae";
-
+    progressContainer.style.display = "none";
 
     verifiedSound();
+    sendFirebaseAccess("opened");
 
-
-    /*
-       Hantar signal Firebase
-       terlebih dahulu.
-    */
-
-    sendFirebaseAccess();
-
-
-    /*
-       Kemudian buka overlay
-       pada laptop.
-    */
-
-    setTimeout(
-        () => {
-
-            unlockSound();
-
-            accessScreen
-                .classList
-                .add("active");
-
-        },
-        500
-    );
-
+    setTimeout(() => {
+        unlockSound();
+        accessScreen.classList.add("active");
+    }, 500);
 }
 
+function relockSystem() {
+    opened = false;
+    palmStart = 0;
+    
+    accessScreen.classList.remove("active");
 
-/* =========================================================
-   FIREBASE ACCESS SIGNAL
-========================================================= */
+    gestureStatus.innerText = "STANDBY";
+    gestureStatus.style.color = "#00d9ff";
+    accessStatus.innerText = "LOCKED";
+    accessStatus.style.color = "#ff5c68";
 
-function sendFirebaseAccess() {
+    statusTitle.innerText = "GESTURE READY";
+    statusTitle.style.color = "#ffffff";
+    statusSubtitle.innerText = "PLACE YOUR PALM INSIDE THE SCAN AREA";
 
-    /*
-       Pastikan Firebase tersedia.
-    */
+    centerIcon.innerText = "🖐";
+    centerIcon.style.color = "#00d9ff";
 
-    if (
-        !firebaseReady ||
-        !accessRef
-    ) {
+    progressContainer.style.display = "none";
+    progressBar.style.width = "0%";
 
-        console.warn(
-            "Firebase tidak tersedia."
-        );
+    tone(400, .15, "sine", .08);
+    sendFirebaseAccess("locked");
+}
 
+relockBtn.addEventListener("click", relockSystem);
+modalRelockBtn.addEventListener("click", relockSystem);
+
+function sendFirebaseAccess(status = "opened") {
+    if (!firebaseReady || !accessRef) {
+        console.warn("Firebase tidak tersedia.");
         return;
-
     }
 
-
-    /*
-       ID unik untuk setiap
-       pengesahan gesture.
-    */
-
-    const eventId =
-        "safe" +
-        Date.now();
-
-
+    const eventId = "safe_" + Date.now();
     const payload = {
-
-        status:
-            "opened",
-
-        eventId:
-            eventId,
-
-        timestamp:
-            firebase.database
-                .ServerValue
-                .TIMESTAMP,
-
-        source:
-            "gesture-controller",
-
-        ceremony:
-            "SAFE SK ABANG GESA 2026"
-
+        status: status,
+        eventId: eventId,
+        timestamp: firebase.database.ServerValue.TIMESTAMP,
+        source: "gesture-controller",
+        ceremony: "SAFE SK ABANG GESA 2026"
     };
 
-
-    accessRef
-        .set(payload)
-
-        .then(
-            () => {
-
-                console.log(
-                    "Firebase: access signal sent",
-                    eventId
-                );
-
-            }
-        )
-
-        .catch(
-            error => {
-
-                console.error(
-                    "Firebase write error:",
-                    error
-                );
-
-            }
-        );
-
+    accessRef.set(payload)
+        .then(() => {
+            console.log(`Firebase signal sent: [${status}]`, eventId);
+        })
+        .catch(error => {
+            console.error("Firebase write error:", error);
+        });
 }
 
-
 /* =========================================================
-   PARTICLES
+   AMBIENT PARTICLES
 ========================================================= */
 
-for (
-    let i = 0;
-    i < 35;
-    i++
-) {
-
-    const particle =
-        document.createElement(
-            "div"
-        );
-
-
-    particle.className =
-        "particle";
-
-
-    particle.style.left =
-        Math.random() *
-        100 +
-        "%";
-
-
-    particle.style.animationDelay =
-        Math.random() *
-        5 +
-        "s";
-
-
-    particle.style.animationDuration =
-        3 +
-        Math.random() *
-        6 +
-        "s";
-
-
-    document.body.appendChild(
-        particle
-    );
-
+for (let i = 0; i < 35; i++) {
+    const particle = document.createElement("div");
+    particle.className = "particle";
+    particle.style.left = Math.random() * 100 + "%";
+    particle.style.animationDelay = Math.random() * 5 + "s";
+    particle.style.animationDuration = (3 + Math.random() * 6) + "s";
+    document.body.appendChild(particle);
 }
 
-
 /* =========================================================
-   START
+   INITIALIZATION
 ========================================================= */
 
-startCamera();
-
+window.addEventListener("DOMContentLoaded", () => {
+    initializeHands();
+});
 </script>
-
 </body>
 </html>
